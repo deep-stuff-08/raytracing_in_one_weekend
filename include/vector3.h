@@ -35,6 +35,8 @@ public:
 	double length_2() const;
 	vector3& normalize();
 
+	friend double dot(vector3 v1, vector3 v2);
+
 	friend std::ostream& operator<<(std::ostream& out, const vector3& vec);
 };
 

@@ -90,6 +90,11 @@ vector3& vector3::normalize() {
 	return (*this);
 }
 
+double dot(vector3 v1, vector3 v2) {
+	return v1.e[0] * v2.e[0] + v1.e[1] * v2.e[1] + v1.e[2] * v2.e[2];
+}
+
+
 ostream& operator<<(ostream& out, const color& pixColor) {
 	out<<
 		static_cast<int>(255.999 * pixColor.e[0])<<' '<<

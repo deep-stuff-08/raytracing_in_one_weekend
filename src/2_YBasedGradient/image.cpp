@@ -12,7 +12,7 @@ color rayColorFor(const ray& currentray) {
 
 int main(void) {
 	const double aspectRatio = 16.0 / 9.0;
-	const int imageHeight = 1920;
+	const int imageHeight = 1080;
 	const int imageWidth = static_cast<int>(imageHeight * aspectRatio);
 
 	double viewportHeight = 2.0;
