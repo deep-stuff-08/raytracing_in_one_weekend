@@ -25,20 +25,20 @@ public:
 	vector3& operator+=(const vector3& vec);
 	vector3& operator*=(const double& sca);
 	vector3& operator/=(const double& sca);
+	friend vector3 operator*(const vector3& vec, double sca);
+	friend vector3 operator*(double sca, const vector3& vec);
+	friend vector3 operator+(const vector3& vec, const vector3& vec2);
+	friend vector3 operator/(const vector3& vec, double sca);
+	friend vector3 operator-(const vector3& vec, const vector3& vec2);
 
 	double length() const;
 	double length_2() const;
+	vector3& normalize();
+
+	friend std::ostream& operator<<(std::ostream& out, const vector3& vec);
 };
 
-class point : public vector3 {
-
-};
-
-class color : public vector3 {
-public:
-	color() : vector3() {}
-	color(double r, double g, double b) : vector3(r, g, b) {}
-	friend std::ostream& operator<<(std::ostream& out, color& vec);
-};
+using point = vector3;
+using color = vector3;
 
 #endif
