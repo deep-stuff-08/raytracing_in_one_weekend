@@ -103,11 +103,22 @@ double dot(vector3 v1, vector3 v2) {
 	return v1.e[0] * v2.e[0] + v1.e[1] * v2.e[1] + v1.e[2] * v2.e[2];
 }
 
-
 ostream& operator<<(ostream& out, const color& pixColor) {
 	out<<
 		static_cast<int>(255.999 * pixColor.e[0])<<' '<<
 		static_cast<int>(255.999 * pixColor.e[1])<<' '<<
 		static_cast<int>(255.999 * pixColor.e[2])<<'\n';
 	return out;
+}
+
+double clamp(double x, double minx, double maxx) {
+	return max(min(x, 1.0), 0.0);
+}
+
+void vector3::writeColor(std::ostream& out, int sample) {
+	vector3 col = (*this) / sample;
+	out<<
+		static_cast<int>(256 * clamp(col[0], 0, 0.999))<<' '<<
+		static_cast<int>(256 * clamp(col[1], 0, 0.999))<<' '<<
+		static_cast<int>(256 * clamp(col[2], 0, 0.999))<<'\n';
 }

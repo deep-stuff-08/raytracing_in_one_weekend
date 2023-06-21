@@ -40,6 +40,7 @@ public:
 	friend double dot(vector3 v1, vector3 v2);
 
 	friend std::ostream& operator<<(std::ostream& out, const vector3& vec);
+	void writeColor(std::ostream& out, int sample);
 };
 
 using point = vector3;

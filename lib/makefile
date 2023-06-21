@@ -1,4 +1,4 @@
-all: libvector3.so libray.so libhit.so
+all: libvector3.so libray.so libhit.so libcamera.so
 
 libvector3.so: src/vector3.cpp
 	g++ -I ../include src/vector3.cpp -fPIC -shared -o libvector3.so
@@ -8,3 +8,6 @@ libray.so: src/ray.cpp
 
 libhit.so: src/hit.cpp
 	g++ -I ../include src/hit.cpp -fPIC -shared -o libhit.so
+
+libcamera.so: src/camera.cpp
+	g++ -I ../include src/camera.cpp -fPIC -shared -o libcamera.so
