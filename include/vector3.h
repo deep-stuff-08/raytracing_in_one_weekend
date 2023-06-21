@@ -28,6 +28,8 @@ public:
 	friend vector3 operator*(const vector3& vec, double sca);
 	friend vector3 operator*(double sca, const vector3& vec);
 	friend vector3 operator+(const vector3& vec, const vector3& vec2);
+	friend vector3 operator+(const vector3& vec, const double& sca);
+	friend vector3 operator+(const double& sca, const vector3& vec);
 	friend vector3 operator/(const vector3& vec, double sca);
 	friend vector3 operator-(const vector3& vec, const vector3& vec2);
 

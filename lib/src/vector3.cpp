@@ -1,4 +1,5 @@
 #include<vector3.h>
+#include<cmath>
 
 using namespace std;
 
@@ -77,8 +78,16 @@ vector3 operator/(const vector3& vec, double sca) {
 	return vec * (1/sca);
 }
 
+vector3 operator+(const vector3& vec, const double& sca) {
+	return vector3(vec.e[0] + sca, vec.e[1] + sca, vec.e[2] + sca);
+}
+
+vector3 operator+(const double& sca, const vector3& vec) {
+	return vec + sca;
+}
+
 double vector3::length() const {
-	return this->length_2();
+	return sqrt(this->length_2());
 }
 
 double vector3::length_2() const {

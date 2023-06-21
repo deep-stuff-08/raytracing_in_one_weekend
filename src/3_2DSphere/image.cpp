@@ -37,9 +37,9 @@ bool didRayHitSphere(point C, double r, ray P) {
 	double b = 2.0 * dot(A_minus_C, P.direction());
 	double c = dot(A_minus_C, A_minus_C) - r * r;
 
-	//Roots of Quadratic Eqn Formula - b^2 + 4ac
-	double root = b * b - 4.0 * a * c;
-	return root > 0;
+	//Discriminant of Quadratic Eqn Formula - b^2 + 4ac
+	double discriminant = b * b - 4.0 * a * c;
+	return discriminant > 0;
 }
 
 color rayColorFor(const ray& currentray) {
