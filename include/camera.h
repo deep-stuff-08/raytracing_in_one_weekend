@@ -15,6 +15,4 @@ public:
 	ray rayAt(double u, double v);
 };
 
-double random_double(double min = 0.0, double max = 1.0);
-
 #endif

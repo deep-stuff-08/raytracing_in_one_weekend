@@ -41,7 +41,14 @@ public:
 
 	friend std::ostream& operator<<(std::ostream& out, const vector3& vec);
 	void writeColor(std::ostream& out, int sample);
+
+	static vector3 random(double min = 0.0, double max = 1.0);
 };
+
+double random_double(double min = 0.0, double max = 1.0);
+vector3 random_in_unit_sphere();
+vector3 random_on_unit_sphere();
+vector3 random_in_unit_hemisphere(vector3 normal);
 
 using point = vector3;
 using color = vector3;

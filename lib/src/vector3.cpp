@@ -1,5 +1,6 @@
 #include<vector3.h>
 #include<cmath>
+#include<random>
 
 using namespace std;
 
@@ -116,9 +117,47 @@ double clamp(double x, double minx, double maxx) {
 }
 
 void vector3::writeColor(std::ostream& out, int sample) {
-	vector3 col = (*this) / sample;
+	double r = this->e[0];
+	double g = this->e[1];
+	double b = this->e[2];
+
+	double scale = 1.0 / sample;
+    r = sqrt(scale * r);
+    g = sqrt(scale * g);
+    b = sqrt(scale * b);
 	out<<
-		static_cast<int>(256 * clamp(col[0], 0, 0.999))<<' '<<
-		static_cast<int>(256 * clamp(col[1], 0, 0.999))<<' '<<
-		static_cast<int>(256 * clamp(col[2], 0, 0.999))<<'\n';
+		static_cast<int>(256 * clamp(r, 0, 0.999))<<' '<<
+		static_cast<int>(256 * clamp(g, 0, 0.999))<<' '<<
+		static_cast<int>(256 * clamp(b, 0, 0.999))<<'\n';
+}
+
+double random_double(double min, double max) {
+	static uniform_real_distribution<double> distribution(min, max);
+	static mt19937 generator;
+	return distribution(generator);
+}
+
+vector3 vector3::random(double min, double max) {
+	return vector3(random_double(min, max), random_double(min, max), random_double(min, max));
+}
+
+vector3 random_in_unit_sphere() {
+	while(true) {
+		vector3 v = vector3::random(-1.0, 1.0);
+		if(v.length_2() >= 1) continue;
+		return v;
+	}
+}
+
+vector3 random_on_unit_sphere() {
+	vector3 v = vector3::random(-1.0, 1.0).normalize();
+	return v;
+}
+
+vector3 random_in_unit_hemisphere(vector3 normal) {
+	vector3 in_unit_sphere = random_in_unit_sphere();
+	if (dot(in_unit_sphere, normal) > 0.0) // In the same hemisphere as the normal
+		return in_unit_sphere;
+	else
+		return -in_unit_sphere;
 }

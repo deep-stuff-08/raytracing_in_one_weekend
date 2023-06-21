@@ -1,5 +1,4 @@
 #include<camera.h>
-#include<random>
 
 using namespace std;
 
@@ -15,10 +14,4 @@ camera::camera(double aspectRatio, double viewport, double focalLenght) {
 
 ray camera::rayAt(double u, double v) {
 	return ray(this->origin, this->lowerLeftConner + u * this->horizontal + v * this->vertical - origin);
-}
-
-double random_double(double min, double max) {
-	static uniform_real_distribution<double> distribution(min, max);
-	static mt19937 generator;
-	return distribution(generator);
 }
