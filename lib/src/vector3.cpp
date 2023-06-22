@@ -132,31 +132,24 @@ vector3 refract(const vector3& v, const vector3& n, double ratio) {
 	return r_parallel + r_perp;
 }
 
-ostream& operator<<(ostream& out, const color& pixColor) {
-	out<<
-		static_cast<int>(255.999 * pixColor.e[0])<<' '<<
-		static_cast<int>(255.999 * pixColor.e[1])<<' '<<
-		static_cast<int>(255.999 * pixColor.e[2])<<'\n';
-	return out;
-}
-
 double clamp(double x, double minx, double maxx) {
 	return max(min(x, 1.0), 0.0);
 }
 
-void vector3::writeColor(std::ostream& out, int sample) {
+void vector3::addColor(std::vector<unsigned char>& v, int sample) {
 	double r = this->e[0];
 	double g = this->e[1];
 	double b = this->e[2];
 
-	double scale = 1.0 / sample;
-    r = sqrt(scale * r);
-    g = sqrt(scale * g);
-    b = sqrt(scale * b);
-	out<<
-		static_cast<int>(256 * clamp(r, 0, 0.999))<<' '<<
-		static_cast<int>(256 * clamp(g, 0, 0.999))<<' '<<
-		static_cast<int>(256 * clamp(b, 0, 0.999))<<'\n';
+	if(sample > 1) {
+		double scale = 1.0 / sample;
+		r = sqrt(scale * r);
+		g = sqrt(scale * g);
+		b = sqrt(scale * b);
+	}
+	v.push_back(static_cast<int>(256 * clamp(r, 0, 0.999)));
+	v.push_back(static_cast<int>(256 * clamp(g, 0, 0.999)));
+	v.push_back(static_cast<int>(256 * clamp(b, 0, 0.999)));
 }
 
 double random_double(double min, double max) {

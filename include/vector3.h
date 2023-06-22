@@ -2,6 +2,7 @@
 #define __VECTOR_3__
 
 #include<iostream>
+#include<vector>
 
 class vector3 {
 protected:
@@ -45,8 +46,7 @@ public:
 	friend vector3 reflect(const vector3& v, const vector3& n);
 	friend vector3 refract(const vector3& v, const vector3& n, double ratio);
 
-	friend std::ostream& operator<<(std::ostream& out, const vector3& vec);
-	void writeColor(std::ostream& out, int sample);
+	void addColor(std::vector<unsigned char>& v, int sample = 1);
 
 	static vector3 random(double min = 0.0, double max = 1.0);
 };
