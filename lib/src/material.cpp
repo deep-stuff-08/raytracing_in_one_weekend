@@ -30,7 +30,7 @@ bool dielectric::scatter(const ray& rayIn, const hit_record& rec, color& attenua
 	bool cannotRefract = refractionRatio * sintheta > 1.0;
 
 	vector3 direction;
-	if(cannotRefract || reflectance(costheta, refractionRatio) > random_double()) {
+	if(cannotRefract) {
 		direction = reflect(b, rec.normal);
 	} else {
 		direction = refract(b, rec.normal, refractionRatio);
