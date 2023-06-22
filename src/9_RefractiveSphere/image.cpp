@@ -4,7 +4,7 @@
 #include<vector3.h>
 #include<ray.h>
 #include<hit.h>
-#include<camera.h>
+#include<basiccamera.h>
 #include<material.h>
 
 using namespace std;
