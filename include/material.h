@@ -27,4 +27,13 @@ public:
 	virtual bool scatter(const ray& rayIn, const hit_record& rec, color& attenuation, ray& scattered) const override;
 };
 
+class dielectric : public material {
+private:
+	double indexOfRefraction;
+public:
+	dielectric(double ir) : indexOfRefraction(ir) {}
+	virtual bool scatter(const ray& rayIn, const hit_record& rec, color& attenuation, ray& scattered) const override;
+	static double reflectance(double costheta, double ratio);
+};
+
 #endif

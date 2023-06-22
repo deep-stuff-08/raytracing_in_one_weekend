@@ -42,6 +42,7 @@ public:
 
 	friend double dot(vector3 v1, vector3 v2);
 	friend vector3 reflect(const vector3& v, const vector3& n);
+	friend vector3 refract(const vector3& v, const vector3& n, double ratio);
 
 	friend std::ostream& operator<<(std::ostream& out, const vector3& vec);
 	void writeColor(std::ostream& out, int sample);

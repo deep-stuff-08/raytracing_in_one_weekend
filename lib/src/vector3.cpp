@@ -117,6 +117,13 @@ vector3 reflect(const vector3& v, const vector3& n) {
 	return v - 2.0 * dot(v, n) * n;
 }
 
+vector3 refract(const vector3& v, const vector3& n, double ratio) {
+	double costheta = fmin(dot(-v, n), 1.0);
+	vector3 r_perp = ratio * (v + costheta * n);
+	vector3 r_parallel = -sqrt(fabs(1.0 - r_perp.length_2())) * n;
+	return r_parallel + r_perp;
+}
+
 ostream& operator<<(ostream& out, const color& pixColor) {
 	out<<
 		static_cast<int>(255.999 * pixColor.e[0])<<' '<<
