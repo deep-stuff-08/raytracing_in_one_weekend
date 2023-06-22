@@ -11,7 +11,7 @@ private:
 	vector3 horizontal;
 	vector3 vertical;
 public:
-	camera(double aspectRatio, double viewport, double focalLenght);
+	camera(double vfov, double aspectRatio, double viewport, double focalLenght);
 	ray rayAt(double u, double v);
 };
 
