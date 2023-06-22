@@ -4,7 +4,7 @@
 #include<vector3.h>
 #include<ray.h>
 #include<hit.h>
-#include<camera.h>
+#include<basiccamera.h>
 
 using namespace std;
 
@@ -27,8 +27,8 @@ int main(void) {
 	const int samplesPerPixel = 100;
 
 	hit_list world;
-	world.add(make_shared<sphereobj>(point(0, 0, -1), 0.5));
-	world.add(make_shared<sphereobj>(point(0, -100.5, -1), 100));
+	world.add(make_shared<sphereobj>(point(0, 0, -1), nullptr, 0.5));
+	world.add(make_shared<sphereobj>(point(0, -100.5, -1), nullptr, 100));
 
 	camera cam(aspectRatio, 2.0, 1.0);
 

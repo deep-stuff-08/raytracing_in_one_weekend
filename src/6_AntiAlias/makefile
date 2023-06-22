@@ -5,7 +5,7 @@ all: run
 run: image.run opengl.run
 
 image.run: image.cpp
-	g++ -I ../../include image.cpp -L ../../lib -lvector3 -lray -lhit -lcamera -o image.run
+	g++ -I ../../include image.cpp -L ../../lib -lvector3 -lray -lhit -lbasiccamera -o image.run
 
 opengl.run:
 	g++ opengl.cpp -o opengl.run

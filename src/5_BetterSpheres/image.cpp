@@ -57,8 +57,8 @@ int main(void) {
 	const int imageWidth = static_cast<int>(imageHeight * aspectRatio);
 
 	hit_list world;
-	world.add(make_shared<sphereobj>(point(0, 0, -1), 0.5));
-	world.add(make_shared<sphereobj>(point(0, -100.5, -1), 100));
+	world.add(make_shared<sphereobj>(point(0, 0, -1), nullptr, 0.5));
+	world.add(make_shared<sphereobj>(point(0, -100.5, -1), nullptr, 100));
 
 	double viewportHeight = 2.0;
 	double viewportWidth = viewportHeight * aspectRatio;
