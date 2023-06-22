@@ -3,16 +3,20 @@
 
 using namespace std;
 
-camera::camera(double vfov, double aspectRatio, double viewport, double focalLenght) {
+camera::camera(vector3 eye, vector3 center, vector3 up, double vfov, double aspectRatio, double viewport, double focalLenght) {
 	double fov = vfov * M_PI / 180.0;
 	double h = tan(fov / 2);
 	double vwportHeight = viewport * h;
 	double vwportWidth = vwportHeight * aspectRatio;
 
-	this->origin = vector3(0, 0, 0);
-	this->horizontal = vector3(vwportWidth, 0, 0);
-	this->vertical = vector3(0, vwportHeight, 0);
-	this->lowerLeftConner = origin - horizontal/2 - vertical/2 - vector3(0, 0, focalLenght);
+	vector3 w = (eye - center).normalize();
+	vector3 u = cross(up, w).normalize();
+	vector3 v = cross(w, u);
+
+	this->origin = eye;
+	this->horizontal = u * vwportWidth;
+	this->vertical = v * vwportHeight;
+	this->lowerLeftConner = origin - horizontal/2 - vertical/2 - w;
 }
 
 ray camera::rayAt(double u, double v) {

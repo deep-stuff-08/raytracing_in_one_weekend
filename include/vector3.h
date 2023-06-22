@@ -41,6 +41,7 @@ public:
 	vector3& normalize();
 
 	friend double dot(vector3 v1, vector3 v2);
+	friend vector3 cross(vector3 v1, vector3 v2);
 	friend vector3 reflect(const vector3& v, const vector3& n);
 	friend vector3 refract(const vector3& v, const vector3& n, double ratio);
 

@@ -113,6 +113,14 @@ double dot(vector3 v1, vector3 v2) {
 	return v1.e[0] * v2.e[0] + v1.e[1] * v2.e[1] + v1.e[2] * v2.e[2];
 }
 
+vector3 cross(vector3 v1, vector3 v2) {
+	return vector3(
+		v1.e[1] * v2.e[2] - v1.e[2] * v2.e[1],
+		v1.e[2] * v2.e[0] - v1.e[0] * v2.e[2],
+		v1.e[0] * v2.e[1] - v1.e[1] * v2.e[0]
+	);
+}
+
 vector3 reflect(const vector3& v, const vector3& n) {
 	return v - 2.0 * dot(v, n) * n;
 }
