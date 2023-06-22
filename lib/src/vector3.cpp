@@ -28,6 +28,11 @@ double vector3::b() const {
 	return e[2];
 }
 
+bool vector3::isNearZero() const {
+	const double s = 1e-8;
+	return (fabs(e[0]) < s) && (fabs(e[1]) < s) && (fabs(e[2]) < s);
+}
+
 double vector3::operator[](int i) const {
 	return e[i];
 }
@@ -67,6 +72,10 @@ vector3 operator*(double sca, const vector3& vec) {
 	return vec * sca;
 }
 
+vector3 operator*(const vector3& vec, const vector3& vec2) {
+	return vector3(vec.e[0] * vec2.e[0], vec.e[1] * vec2.e[1], vec.e[2] * vec2.e[2]);
+}
+
 vector3 operator+(const vector3& vec, const vector3& vec2) {
 	return vector3(vec.e[0] + vec2.e[0], vec.e[1] + vec2.e[1], vec.e[2] + vec2.e[2]);
 }
@@ -102,6 +111,10 @@ vector3& vector3::normalize() {
 
 double dot(vector3 v1, vector3 v2) {
 	return v1.e[0] * v2.e[0] + v1.e[1] * v2.e[1] + v1.e[2] * v2.e[2];
+}
+
+vector3 reflect(const vector3& v, const vector3& n) {
+	return v - 2.0 * dot(v, n) * n;
 }
 
 ostream& operator<<(ostream& out, const color& pixColor) {

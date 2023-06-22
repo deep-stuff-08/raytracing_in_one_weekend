@@ -26,6 +26,7 @@ bool sphereobj::hit(const ray& P, double t_min, double t_max, hit_record& rec) c
 	rec.frontFacing = dot(P.direction(), outnormals) < 0;
 	rec.normal = rec.frontFacing ? outnormals : -outnormals;
 	rec.normal = rec.normal.normalize();
+	rec.matPtr = this->matPtr;
 	return true;
 }
 

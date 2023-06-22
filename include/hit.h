@@ -5,9 +5,12 @@
 #include<memory>
 #include<ray.h>
 
+class material;
+
 struct hit_record {
 	point p;
 	vector3 normal;
+	std::shared_ptr<material> matPtr;
 	double t;
 	bool frontFacing;
 };
@@ -21,9 +24,10 @@ class sphereobj : public hitobj {
 private:
 	point center;
 	double radius;
+	std::shared_ptr<material> matPtr;
 public:
 	sphereobj() : radius(0) {}
-	sphereobj(point p, double r) : center(p), radius(r) {}
+	sphereobj(point p, std::shared_ptr<material> mat, double r) : center(p), radius(r), matPtr(mat) {}
 	virtual bool hit(const ray& r, double t_min, double t_max, hit_record& rec) const override;
 };
 

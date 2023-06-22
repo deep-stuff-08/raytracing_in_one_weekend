@@ -18,6 +18,8 @@ public:
 	double g() const;
 	double b() const;
 
+	bool isNearZero() const;
+
 	double operator[](int i) const;
 	double& operator[](int i);
 
@@ -27,6 +29,7 @@ public:
 	vector3& operator/=(const double& sca);
 	friend vector3 operator*(const vector3& vec, double sca);
 	friend vector3 operator*(double sca, const vector3& vec);
+	friend vector3 operator*(const vector3& vec, const vector3& vec2);
 	friend vector3 operator+(const vector3& vec, const vector3& vec2);
 	friend vector3 operator+(const vector3& vec, const double& sca);
 	friend vector3 operator+(const double& sca, const vector3& vec);
@@ -38,6 +41,7 @@ public:
 	vector3& normalize();
 
 	friend double dot(vector3 v1, vector3 v2);
+	friend vector3 reflect(const vector3& v, const vector3& n);
 
 	friend std::ostream& operator<<(std::ostream& out, const vector3& vec);
 	void writeColor(std::ostream& out, int sample);
