@@ -48,7 +48,7 @@ int main(void) {
 	world.add(make_shared<sphereobj>(point(-1, 0, -1), matLeft, -0.45));
 	world.add(make_shared<sphereobj>(point(1, 0, -1), matRight, 0.5));
 
-	camera cam(vector3(-2, 2, 1), vector3(0, 0, -1), vector3(0, 1, 0), 30.0, aspectRatio, 2.0, 1.0);
+	camera cam(vector3(-2, 2, 1), vector3(0, 0, -1), vector3(0, 1, 0), 30.0, aspectRatio, 0.0, 1.0);
 
 	cout<<"P3\n"<<imageWidth<<' '<<imageHeight<<"\n255\n";
 	for(int i = imageHeight - 1; i >= 0; i--) {
