@@ -169,6 +169,14 @@ vector3 vector3::random(double min, double max) {
 	return vector3(random_double(min, max), random_double(min, max), random_double(min, max));
 }
 
+vector3 random_in_unit_disk() {
+	while(true) {
+		vector3 v = vector3(random_double(-1.0, 1.0), random_double(-1.0, 1.0), 0.0);
+		if(v.length_2() >= 1) continue;
+		return v;
+	}
+}
+
 vector3 random_in_unit_sphere() {
 	while(true) {
 		vector3 v = vector3::random(-1.0, 1.0);

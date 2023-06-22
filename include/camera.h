@@ -10,8 +10,10 @@ private:
 	point lowerLeftConner;
 	vector3 horizontal;
 	vector3 vertical;
+	double lensRadius;
+	vector3 u, v, w;
 public:
-	camera(vector3 eye, vector3 center, vector3 up, double vfov, double aspectRatio, double viewport, double focalLenght);
+	camera(vector3 eye, vector3 center, vector3 up, double vfov, double aspectRatio, double aperature, double focalDist);
 	ray rayAt(double u, double v);
 };
 

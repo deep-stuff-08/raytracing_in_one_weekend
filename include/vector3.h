@@ -52,6 +52,7 @@ public:
 };
 
 double random_double(double min = 0.0, double max = 1.0);
+vector3 random_in_unit_disk();
 vector3 random_in_unit_sphere();
 vector3 random_on_unit_sphere();
 vector3 random_in_unit_hemisphere(vector3 normal);
