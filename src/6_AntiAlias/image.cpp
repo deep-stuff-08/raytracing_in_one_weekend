@@ -5,6 +5,8 @@
 #include<ray.h>
 #include<hit.h>
 #include<basiccamera.h>
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include<stb_image_write.h>
 
 using namespace std;
 
@@ -26,15 +28,16 @@ int main(void) {
 	const int imageWidth = static_cast<int>(imageHeight * aspectRatio);
 	const int samplesPerPixel = 100;
 
+	vector<unsigned char> pngData;
+	
 	hit_list world;
 	world.add(make_shared<sphereobj>(point(0, 0, -1), nullptr, 0.5));
 	world.add(make_shared<sphereobj>(point(0, -100.5, -1), nullptr, 100));
 
 	camera cam(aspectRatio, 2.0, 1.0);
 
-	cout<<"P3\n"<<imageWidth<<' '<<imageHeight<<"\n255\n";
 	for(int i = imageHeight - 1; i >= 0; i--) {
-		cerr<<"\rScanlines remaining: "<<i<<' '<<flush;
+		cout<<"\rScanlines remaining: "<<i<<' '<<flush;
 		for(int j = 0; j < imageWidth; j++) {
 			color pixColor;
 				for(int s = 0; s < samplesPerPixel; s++) {
@@ -43,8 +46,9 @@ int main(void) {
 				ray r = cam.rayAt(u, v);
 				pixColor += rayColorFor(r, world);
 			}
-			pixColor.writeColor(cout, samplesPerPixel);
+			pixColor.addColor(pngData, samplesPerPixel);
 		}
 	}
-	cerr<<"\nDone.\n";
+	stbi_write_png("output.png", imageWidth, imageHeight, 3, pngData.data(), imageWidth * 3);
+	cout<<"\nDone.\n";
 }

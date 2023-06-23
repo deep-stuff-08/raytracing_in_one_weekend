@@ -6,6 +6,8 @@
 #include<hit.h>
 #include<camera.h>
 #include<material.h>
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include<stb_image_write.h>
 
 using namespace std;
 
@@ -35,6 +37,8 @@ int main(void) {
 	const int samplesPerPixel = 100;
 	const int maxDepth = 50;
 
+	vector<unsigned char> pngData;
+	
 	hit_list world;
 
 	double R = cos(M_PI_4);
@@ -46,9 +50,8 @@ int main(void) {
 
 	camera cam(vector3(0, 0, 0), vector3(0, 0, -1), vector3(0, 1, 0), 90.0, aspectRatio, 0.0, 1.0);
 
-	cout<<"P3\n"<<imageWidth<<' '<<imageHeight<<"\n255\n";
 	for(int i = imageHeight - 1; i >= 0; i--) {
-		cerr<<"\rScanlines remaining: "<<i<<' '<<flush;
+		cout<<"\rScanlines remaining: "<<i<<' '<<flush;
 		for(int j = 0; j < imageWidth; j++) {
 			color pixColor;
 				for(int s = 0; s < samplesPerPixel; s++) {
@@ -57,8 +60,9 @@ int main(void) {
 				ray r = cam.rayAt(u, v);
 				pixColor += rayColorFor(r, world, maxDepth);
 			}
-			pixColor.writeColor(cout, samplesPerPixel);
+			pixColor.addColor(pngData, samplesPerPixel);
 		}
 	}
-	cerr<<"\nDone.\n";
+	stbi_write_png("output.png", imageWidth, imageHeight, 3, pngData.data(), imageWidth * 3);
+	cout<<"\nDone.\n";
 }

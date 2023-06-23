@@ -1,6 +1,8 @@
 #include<iostream>
 #include<vector3.h>
 #include<ray.h>
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include<stb_image_write.h>
 
 using namespace std;
 
@@ -56,6 +58,8 @@ int main(void) {
 	const int imageHeight = 1080;
 	const int imageWidth = static_cast<int>(imageHeight * aspectRatio);
 
+	vector<unsigned char> pngData;
+
 	double viewportHeight = 2.0;
 	double viewportWidth = viewportHeight * aspectRatio;
 	double focalLength = 1.0;
@@ -65,15 +69,15 @@ int main(void) {
 	vector3 vertical = vector3(0.0, viewportHeight, 0.0);
 	vector3 lowerLeftConner = origin - horizontal/2 - vertical/2 - vector3(0, 0, focalLength);
 
-	cout<<"P3\n"<<imageWidth<<' '<<imageHeight<<"\n255\n";
 	for(int i = imageHeight - 1; i >= 0; i--) {
-		cerr<<"\rScanlines remaining: "<<i<<' '<<flush;
+		cout<<"\rScanlines remaining: "<<i<<' '<<flush;
 		for(int j = 0; j < imageWidth; j++) {
 			double u = (double)j / (imageWidth - 1);
 			double v = (double)i / (imageHeight - 1);
 			ray r(origin, lowerLeftConner + u * horizontal + v * vertical - origin);
-			cout<<rayColorFor(r);
+			rayColorFor(r).addColor(pngData);
 		}
 	}
-	cerr<<"\nDone.\n";
+	stbi_write_png("output.png", imageWidth, imageHeight, 3, pngData.data(), imageWidth * 3);
+	cout<<"\nDone.\n";
 }

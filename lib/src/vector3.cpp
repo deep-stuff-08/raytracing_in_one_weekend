@@ -147,9 +147,9 @@ void vector3::addColor(std::vector<unsigned char>& v, int sample) {
 		g = sqrt(scale * g);
 		b = sqrt(scale * b);
 	}
-	v.push_back(static_cast<int>(256 * clamp(r, 0, 0.999)));
-	v.push_back(static_cast<int>(256 * clamp(g, 0, 0.999)));
-	v.push_back(static_cast<int>(256 * clamp(b, 0, 0.999)));
+	v.push_back(static_cast<unsigned char>(255 * clamp(r, 0, 1)));
+	v.push_back(static_cast<unsigned char>(255 * clamp(g, 0, 1)));
+	v.push_back(static_cast<unsigned char>(255 * clamp(b, 0, 1)));
 }
 
 double random_double(double min, double max) {
