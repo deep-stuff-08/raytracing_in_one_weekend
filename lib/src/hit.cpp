@@ -30,6 +30,37 @@ bool sphereobj::hit(const ray& P, double t_min, double t_max, hit_record& rec) c
 	return true;
 }
 
+bool movingsphereobj::hit(const ray& P, double t_min, double t_max, hit_record& rec) const {
+	vector3 A_minus_C = P.origin() - center(P.time());
+	double a = P.direction().length_2();
+	double h = dot(A_minus_C, P.direction());
+	double c = dot(A_minus_C, A_minus_C) - this->radius * this->radius;
+	double discriminant = h * h - a * c;
+	if(discriminant < 0) {
+		return false;
+	}
+	double sqrtd = sqrt(discriminant);
+	double root = (-h - sqrtd) / a;
+	if(root < t_min || root > t_max) {
+		root = (-h + sqrtd) / a;
+		if(root < t_min || root > t_max) {
+			return false;
+		}
+	}
+	rec.t = root;
+	rec.p = P.at(rec.t);
+	vector3 outnormals = (rec.p - this->center(P.time())) / this->radius;
+	rec.frontFacing = dot(P.direction(), outnormals) < 0;
+	rec.normal = rec.frontFacing ? outnormals : -outnormals;
+	rec.normal = rec.normal.normalize();
+	rec.matPtr = this->matPtr;
+	return true;
+}
+
+point movingsphereobj::center(double time) const {
+	return startCenter + ((time - startTime) / (endTime - startTime)) * (endCenter - startCenter);
+}
+
 void hit_list::add(shared_ptr<hitobj> obj) {
 	this->objs.push_back(obj);
 }

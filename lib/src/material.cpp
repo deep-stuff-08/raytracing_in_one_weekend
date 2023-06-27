@@ -7,14 +7,14 @@ bool lambertian::scatter(const ray& rayIn, const hit_record& rec, color& attenua
 	if(scatterDirection.isNearZero()) {
 		scatterDirection = rec.normal;
 	}
-	scattered = ray(rec.p, scatterDirection);
+	scattered = ray(rec.p, scatterDirection, rayIn.time());
 	attenuation = this->albedo;
 	return true;
 }
 
 bool metal::scatter(const ray& rayIn, const hit_record& rec, color& attenuation, ray& scattered) const {
 	vector3 reflected = reflect(rayIn.direction().normalize(), rec.normal) + this->fuzz * random_in_unit_sphere();
-	scattered = ray(rec.p, reflected);
+	scattered = ray(rec.p, reflected, rayIn.time());
 	attenuation = albedo;
 	return (dot(reflected, rec.normal) > 0);
 }
@@ -35,7 +35,7 @@ bool dielectric::scatter(const ray& rayIn, const hit_record& rec, color& attenua
 	} else {
 		direction = refract(b, rec.normal, refractionRatio);
 	}
-	scattered = ray(rec.p, direction);
+	scattered = ray(rec.p, direction, rayIn.time());
 	return true;
 }
 

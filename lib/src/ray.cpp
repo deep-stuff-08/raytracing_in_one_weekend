@@ -11,3 +11,7 @@ vector3 ray::direction() const {
 point ray::at(double t) const {
 	return originPoint + directionRay * t;
 }
+
+double ray::time() const {
+	return timeInterval;
+}

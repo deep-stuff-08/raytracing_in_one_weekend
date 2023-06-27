@@ -3,7 +3,7 @@
 
 using namespace std;
 
-camera::camera(vector3 eye, vector3 center, vector3 up, double vfov, double aspectRatio, double aperature, double focalDist) {
+camera::camera(vector3 eye, vector3 center, vector3 up, double vfov, double aspectRatio, double aperature, double focalDist, double stime, double etime) {
 	double fov = vfov * M_PI / 180.0;
 	double h = tan(fov / 2);
 	double vwportHeight = 2 * h;
@@ -19,10 +19,13 @@ camera::camera(vector3 eye, vector3 center, vector3 up, double vfov, double aspe
 	this->lowerLeftConner = origin - horizontal/2 - vertical/2 - focalDist * w;
 
 	this->lensRadius = aperature / 2.0;
+
+	this->startTime = stime;
+	this->endTime = etime;
 }
 
 ray camera::rayAt(double s, double t) {
 	vector3 rd = lensRadius * random_in_unit_disk();
 	vector3 offset = this->u * rd.x() + this->v * rd.y();
-	return ray(this->origin + offset, this->lowerLeftConner + s * this->horizontal + t * this->vertical - origin - offset);
+	return ray(this->origin + offset, this->lowerLeftConner + s * this->horizontal + t * this->vertical - origin - offset, random_double(startTime, endTime));
 }
