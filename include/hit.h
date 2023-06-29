@@ -4,6 +4,7 @@
 #include<vector>
 #include<memory>
 #include<ray.h>
+#include<aabb.h>
 
 class material;
 
@@ -18,6 +19,7 @@ struct hit_record {
 class hitobj {
 public:
 	virtual bool hit(const ray& r, double t_min, double t_max, hit_record& rec) const = 0;
+	virtual bool boundingBox(double time0, double time1, aabb& outputbox) const = 0;
 };
 
 class sphereobj : public hitobj {
@@ -29,6 +31,7 @@ public:
 	sphereobj() : radius(0) {}
 	sphereobj(point p, std::shared_ptr<material> mat, double r) : center(p), radius(r), matPtr(mat) {}
 	virtual bool hit(const ray& r, double t_min, double t_max, hit_record& rec) const override;
+	virtual bool boundingBox(double time0, double time1, aabb& outputbox) const;
 };
 
 class movingsphereobj : public hitobj {
@@ -41,6 +44,7 @@ public:
 	movingsphereobj(point p0, point p1, std::shared_ptr<material> mat, double r, double t0, double t1) : startCenter(p0), endCenter(p1), radius(r), matPtr(mat), startTime(t0), endTime(t1) {}
 	point center(double time) const;
 	virtual bool hit(const ray& r, double t_min, double t_max, hit_record& rec) const override;
+	virtual bool boundingBox(double time0, double time1, aabb& outputbox) const;
 };
 
 class hit_list : public hitobj {

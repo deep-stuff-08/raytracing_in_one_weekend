@@ -30,6 +30,11 @@ bool sphereobj::hit(const ray& P, double t_min, double t_max, hit_record& rec) c
 	return true;
 }
 
+bool sphereobj::boundingBox(double time0, double time1, aabb& outputbox) const {
+	outputbox = aabb(this->center - vector3(this->radius, this->radius, this->radius), this->center + vector3(this->radius, this->radius, this->radius));
+	return true;
+}
+
 bool movingsphereobj::hit(const ray& P, double t_min, double t_max, hit_record& rec) const {
 	vector3 A_minus_C = P.origin() - center(P.time());
 	double a = P.direction().length_2();
@@ -59,6 +64,12 @@ bool movingsphereobj::hit(const ray& P, double t_min, double t_max, hit_record& 
 
 point movingsphereobj::center(double time) const {
 	return startCenter + ((time - startTime) / (endTime - startTime)) * (endCenter - startCenter);
+}
+
+bool movingsphereobj::boundingBox(double time0, double time1, aabb& outputbox) const {
+	aabb aabb0 = aabb(this->center(time0) - vector3(this->radius, this->radius, this->radius), this->center(time0) + vector3(this->radius, this->radius, this->radius));
+	aabb aabb1 = aabb(this->center(time1) - vector3(this->radius, this->radius, this->radius), this->center(time1) + vector3(this->radius, this->radius, this->radius));
+	outputbox = aabb0;
 }
 
 void hit_list::add(shared_ptr<hitobj> obj) {
