@@ -93,3 +93,23 @@ bool hit_list::hit(const ray& P, double t_min, double t_max, hit_record& rec) co
 	}
 	return hitAnyting;
 }
+
+bool hit_list::boundingBox(double time0, double time1, aabb& outputbox) const {
+	if(this->objs.empty()) {
+		return false;
+	}
+
+	aabb tempBox;
+	bool firstBox = false;
+
+	for(const std::shared_ptr<hitobj>& hobj : this->objs) {
+		if(!hobj->boundingBox(time0, time1, tempBox)) {
+			return false;
+		}
+		outputbox = firstBox ? tempBox : surroundingBox(outputbox, tempBox);
+	}
+}
+
+bvhnode::bvhnode(const std::vector<std::shared_ptr<hitobj>>& srcObjects, size_t start, size_t end, double time0, double time1) {
+	
+}

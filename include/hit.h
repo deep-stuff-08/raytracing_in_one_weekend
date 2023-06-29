@@ -31,7 +31,7 @@ public:
 	sphereobj() : radius(0) {}
 	sphereobj(point p, std::shared_ptr<material> mat, double r) : center(p), radius(r), matPtr(mat) {}
 	virtual bool hit(const ray& r, double t_min, double t_max, hit_record& rec) const override;
-	virtual bool boundingBox(double time0, double time1, aabb& outputbox) const;
+	virtual bool boundingBox(double time0, double time1, aabb& outputbox) const override;
 };
 
 class movingsphereobj : public hitobj {
@@ -44,8 +44,10 @@ public:
 	movingsphereobj(point p0, point p1, std::shared_ptr<material> mat, double r, double t0, double t1) : startCenter(p0), endCenter(p1), radius(r), matPtr(mat), startTime(t0), endTime(t1) {}
 	point center(double time) const;
 	virtual bool hit(const ray& r, double t_min, double t_max, hit_record& rec) const override;
-	virtual bool boundingBox(double time0, double time1, aabb& outputbox) const;
+	virtual bool boundingBox(double time0, double time1, aabb& outputbox) const override;
 };
+
+class bvhnode;
 
 class hit_list : public hitobj {
 private:
@@ -55,6 +57,19 @@ public:
 	void clear();
 	void add(std::shared_ptr<hitobj> obj);
 	virtual bool hit(const ray& r, double t_min, double t_max, hit_record& rec) const override;
+	virtual bool boundingBox(double time0, double time1, aabb& outputbox) const override;
+	friend bvhnode;
+};
+
+class bvhnode : public hitobj {
+private:
+	shared_ptr<hitobj> left;
+	shared_ptr<hitobj> right;
+	aabb box;
+public:
+	bvhnode() {}
+	bvhnode(const hit_list& list, double time0, double time1) : bvhnode(list.objs, 0, list.objs.size(), time0, time1) {}
+	bvhnode(const std::vector<std::shared_ptr<hitobj>>& srcObjects, size_t start, size_t end, double time0, double time1);
 };
 
 #endif
