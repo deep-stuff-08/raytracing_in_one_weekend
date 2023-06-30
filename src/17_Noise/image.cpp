@@ -36,9 +36,9 @@ hit_list generateScene() {
 	shared_ptr<texture> turb = make_shared<turbulanceColor>(1.0, 7);
 	shared_ptr<texture> noises = make_shared<perlinnoiseColor>(4.0);
 
-	shared_ptr<material> ground = make_shared<lambertian>(noises);
+	shared_ptr<material> ground = make_shared<lambertian>(turb);
 	world.add(make_shared<sphereobj>(point(0, -1000, 0), ground, 1000));
-	shared_ptr<material> mat1 = make_shared<lambertian>(turb);
+	shared_ptr<material> mat1 = make_shared<lambertian>(noises);
 	world.add(make_shared<sphereobj>(point(0, 1, 0), mat1, 1.0));
 	return world;
 }

@@ -25,5 +25,5 @@ color turbulanceColor::value(double u, double v, const point& p) const {
 		temp_p *= 2;
 	}
 
-	return color(1,1,1) * fabs(accum);
+	return color(1,1,1) * 0.5 * (1 + sin(this->scale * p.z() + 10 * fabs(accum)));
 }
