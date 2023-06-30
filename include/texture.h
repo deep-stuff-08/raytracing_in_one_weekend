@@ -50,4 +50,15 @@ public:
 	virtual color value(double u, double v, const point& p) const override;
 };
 
+class textureColor : public texture {
+private:
+	unsigned char* data;
+	int width, height;
+	int bytesPerPixel;
+public:
+	textureColor(std::string filename);
+	~textureColor();
+	virtual color value(double u, double v, const point& p) const override;
+};
+
 #endif

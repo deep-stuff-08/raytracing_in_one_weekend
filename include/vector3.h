@@ -57,6 +57,7 @@ vector3 random_in_unit_disk();
 vector3 random_in_unit_sphere();
 vector3 random_on_unit_sphere();
 vector3 random_in_unit_hemisphere(vector3 normal);
+double clamp(double x, double minx, double maxx);
 
 using point = vector3;
 using color = vector3;
