@@ -83,6 +83,87 @@ bool movingsphereobj::boundingBox(double time0, double time1, aabb& outputbox) c
 	return true;
 }
 
+bool quadobjxy::hit(const ray& r, double t_min, double t_max, hit_record& rec) const {
+	double t = (this->k - r.origin().z()) / r.direction().z();
+	if (t < t_min || t > t_max) {
+		return false;
+	}
+	double x = r.origin().x() + t * r.direction().x();
+	double y = r.origin().y() + t * r.direction().y();
+	if(x < x0 || x > x1 || y < y0 || y > y1) {
+		return false;
+	}
+	rec.u = (x - x0) / (x1 - x0);
+	rec.v = (y - y0) / (y1 - y0);
+	rec.t = t;
+	vector3 outnormals = vector3(0, 0, 1);
+	rec.frontFacing = dot(r.direction(), outnormals) < 0;
+	rec.normal = rec.frontFacing ? outnormals : -outnormals;
+	rec.normal = rec.normal.normalize();
+	rec.matPtr = this->matPtr;
+	rec.p = r.at(t);
+	return true;
+}
+
+bool quadobjxy::boundingBox(double time0, double time1, aabb& outputbox) const {
+	outputbox = aabb(point(this->x0, this->y0, this->k - 0.0001), point(this->x1, this->y1, this->k + 0.0001));
+	return true;
+}
+
+bool quadobjyz::hit(const ray& r, double t_min, double t_max, hit_record& rec) const {
+	double t = (this->k - r.origin().x()) / r.direction().x();
+	if (t < t_min || t > t_max) {
+		return false;
+	}
+	double y = r.origin().y() + t * r.direction().y();
+	double z = r.origin().z() + t * r.direction().z();
+	if(z < z0 || z > z1 || y < y0 || y > y1) {
+		return false;
+	}
+	rec.u = (z - z0) / (z1 - z0);
+	rec.v = (y - y0) / (y1 - y0);
+	rec.t = t;
+	vector3 outnormals = vector3(1, 0, 0);
+	rec.frontFacing = dot(r.direction(), outnormals) < 0;
+	rec.normal = rec.frontFacing ? outnormals : -outnormals;
+	rec.normal = rec.normal.normalize();
+	rec.matPtr = this->matPtr;
+	rec.p = r.at(t);
+	return true;
+}
+
+bool quadobjyz::boundingBox(double time0, double time1, aabb& outputbox) const {
+	outputbox = aabb(point(this->k - 0.0001, this->y0, this->z0), point(this->k + 0.0001, this->y1, this->z1));
+	return true;
+}
+
+bool quadobjxz::hit(const ray& r, double t_min, double t_max, hit_record& rec) const {
+	double t = (this->k - r.origin().y()) / r.direction().y();
+	if (t < t_min || t > t_max) {
+		return false;
+	}
+	double x = r.origin().x() + t * r.direction().x();
+	double z = r.origin().z() + t * r.direction().z();
+	if(x < x0 || x > x1 || z < z0 || z > z1) {
+		return false;
+	}
+	rec.u = (x - x0) / (x1 - x0);
+	rec.v = (z - z0) / (z1 - z0);
+	rec.t = t;
+	vector3 outnormals = vector3(0, 1, 0);
+	rec.frontFacing = dot(r.direction(), outnormals) < 0;
+	rec.normal = rec.frontFacing ? outnormals : -outnormals;
+	rec.normal = rec.normal.normalize();
+	rec.matPtr = this->matPtr;
+	rec.p = r.at(t);
+	return true;
+}
+
+bool quadobjxz::boundingBox(double time0, double time1, aabb& outputbox) const {
+	outputbox = aabb(point(this->x0, this->k - 0.0001, this->z0), point(this->x1, this->k + 0.0001, this->z1));
+	return true;
+}
+
 void hit_list::add(shared_ptr<hitobj> obj) {
 	this->objs.push_back(obj);
 }

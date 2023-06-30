@@ -4,12 +4,14 @@
 #include<ray.h>
 #include<texture.h>
 #include<memory>
+#include<vector3.h>
 
 struct hit_record;
 
 class material {
 public:
 	virtual bool scatter(const ray& rayIn, const hit_record& rec, color& attenuation, ray& scattered) const = 0;
+	virtual color emitted(double u, double v, const point& p) const;
 };
 
 class lambertian : public material {
@@ -37,6 +39,16 @@ public:
 	dielectric(double ir) : indexOfRefraction(ir) {}
 	virtual bool scatter(const ray& rayIn, const hit_record& rec, color& attenuation, ray& scattered) const override;
 	static double reflectance(double costheta, double ratio);
+};
+
+class diffuselight : public material {
+private:
+	std::shared_ptr<texture> tcolor;
+public:
+	diffuselight(std::shared_ptr<texture> tex): tcolor(tex) {}
+	diffuselight(color col): tcolor(std::make_shared<solidColor>(col)) {}
+	virtual bool scatter(const ray& rayIn, const hit_record& rec, color& attenuation, ray& scattered) const override;
+	virtual color emitted(double u, double v, const point& p) const override;
 };
 
 #endif

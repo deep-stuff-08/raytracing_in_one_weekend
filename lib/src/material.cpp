@@ -2,6 +2,10 @@
 #include<hit.h>
 #include<cmath>
 
+color material::emitted(double u, double v, const point& p) const {
+	return color(0, 0, 0);
+}
+
 bool lambertian::scatter(const ray& rayIn, const hit_record& rec, color& attenuation, ray& scattered) const {
 	vector3 scatterDirection = rec.normal + random_on_unit_sphere();
 	if(scatterDirection.isNearZero()) {
@@ -43,4 +47,12 @@ double dielectric::reflectance(double costheta, double ratio) {
 	double r0 = (1 - ratio) / (1 + ratio);
 	r0 = r0 * r0;
 	return r0 + (1-r0) * pow((1 - costheta), 5);
+}
+
+bool diffuselight::scatter(const ray& rayIn, const hit_record& rec, color& attenuation, ray& scattered) const {
+	return false;
+}
+
+color diffuselight::emitted(double u, double v, const point& p) const {
+	return this->tcolor->value(u, v, p);
 }

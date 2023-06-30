@@ -38,6 +38,7 @@ public:
 };
 
 class movingsphereobj : public hitobj {
+private:
 	point startCenter, endCenter;
 	double radius;
 	std::shared_ptr<material> matPtr;
@@ -46,6 +47,39 @@ public:
 	movingsphereobj() : radius(0) {}
 	movingsphereobj(point p0, point p1, std::shared_ptr<material> mat, double r, double t0, double t1) : startCenter(p0), endCenter(p1), radius(r), matPtr(mat), startTime(t0), endTime(t1) {}
 	point center(double time) const;
+	virtual bool hit(const ray& r, double t_min, double t_max, hit_record& rec) const override;
+	virtual bool boundingBox(double time0, double time1, aabb& outputbox) const override;
+};
+
+class quadobjxy : public hitobj {
+private:
+	std::shared_ptr<material> matPtr;
+	double x0, x1, y0, y1, k;
+public:
+	quadobjxy() {}
+	quadobjxy(double _x0, double _x1, double _y0, double _y1, double _k, std::shared_ptr<material> mat): x0(_x0), x1(_x1), y0(_y0), y1(_y1), k(_k), matPtr(mat) {}
+	virtual bool hit(const ray& r, double t_min, double t_max, hit_record& rec) const override;
+	virtual bool boundingBox(double time0, double time1, aabb& outputbox) const override;
+};
+
+class quadobjyz : public hitobj {
+private:
+	std::shared_ptr<material> matPtr;
+	double y0, y1, z0, z1, k;
+public:
+	quadobjyz() {}
+	quadobjyz(double _y0, double _y1, double _z0, double _z1, double _k, std::shared_ptr<material> mat): y0(_y0), y1(_y1), z0(_z0), z1(_z1), k(_k), matPtr(mat) {}
+	virtual bool hit(const ray& r, double t_min, double t_max, hit_record& rec) const override;
+	virtual bool boundingBox(double time0, double time1, aabb& outputbox) const override;
+};
+
+class quadobjxz : public hitobj {
+private:
+	std::shared_ptr<material> matPtr;
+	double x0, x1, z0, z1, k;
+public:
+	quadobjxz() {}
+	quadobjxz(double _x0, double _x1, double _z0, double _z1, double _k, std::shared_ptr<material> mat): x0(_x0), x1(_x1), z0(_z0), z1(_z1), k(_k), matPtr(mat) {}
 	virtual bool hit(const ray& r, double t_min, double t_max, hit_record& rec) const override;
 	virtual bool boundingBox(double time0, double time1, aabb& outputbox) const override;
 };
