@@ -33,10 +33,11 @@ color turbulanceColor::value(double u, double v, const point& p) const {
 }
 
 textureColor::textureColor(string filename) {
-	this->data = stbi_load(filename.c_str(), &this->width, &this->height, &this->bytesPerPixel, 3);
+	string path = "../../res/" + filename;
+	this->data = stbi_load(path.c_str(), &this->width, &this->height, &this->bytesPerPixel, 3);
 
 	if(!this->data) {
-		cerr<<"'"<<filename<<"' image could not be loaded."<<endl;
+		cerr<<"'"<<path<<"' image could not be loaded."<<endl;
 	}
 }
 

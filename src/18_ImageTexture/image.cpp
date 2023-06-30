@@ -9,6 +9,10 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include<stb_image_write.h>
 
+#ifndef RESOURCE_PATH
+#define RESOURCE_PATH ""
+#endif
+
 using namespace std;
 
 color rayColorFor(const ray& currentray, const hitobj& world, int depth) {
@@ -33,8 +37,8 @@ color rayColorFor(const ray& currentray, const hitobj& world, int depth) {
 hit_list generateScene() {
 	hit_list world;
 
-	shared_ptr<texture> turb = make_shared<turbulanceColor>(1.0, 7);
-	shared_ptr<texture> noises = make_shared<textureColor>("../../res/earth.jpg");
+	shared_ptr<texture> turb = make_shared<checkerColor>(make_shared<turbulanceColor>(4.0, 9), make_shared<perlinnoiseColor>(20.0));
+	shared_ptr<texture> noises = make_shared<textureColor>("earth.jpg");
 
 	shared_ptr<material> ground = make_shared<lambertian>(turb);
 	world.add(make_shared<sphereobj>(point(0, -1000, 0), ground, 1000));
