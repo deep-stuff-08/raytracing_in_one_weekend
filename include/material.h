@@ -2,6 +2,8 @@
 #define __MATERIAL
 
 #include<ray.h>
+#include<texture.h>
+#include<memory>
 
 struct hit_record;
 
@@ -12,9 +14,10 @@ public:
 
 class lambertian : public material {
 private:
-	color albedo;
+	std::shared_ptr<texture> albedo;
 public:
-	lambertian(const color& col) : albedo(col) {}
+	lambertian(const color& col) : albedo(std::make_shared<solidColor>(col)) {}
+	lambertian(std::shared_ptr<texture> tex) : albedo(tex) {}
 	virtual bool scatter(const ray& rayIn, const hit_record& rec, color& attenuation, ray& scattered) const override;
 };
 

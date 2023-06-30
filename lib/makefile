@@ -1,6 +1,6 @@
 .PHONY: clean
 
-all: libvector3.so libray.so libhit.so libcamera.so libbasiccamera.so libmaterial.so libaabb.so
+all: libvector3.so libray.so libhit.so libcamera.so libbasiccamera.so libmaterial.so libaabb.so libtexture.so
 
 libvector3.so: src/vector3.cpp
 	g++ -I ../include src/vector3.cpp -fPIC -shared -o libvector3.so
@@ -22,6 +22,9 @@ libmaterial.so: src/material.cpp
 
 libaabb.so: src/aabb.cpp
 	g++ -I ../include src/aabb.cpp -fPIC -shared -o libaabb.so
+
+libtexture.so: src/texture.cpp
+	g++ -I ../include src/texture.cpp -fPIC -shared -o libtexture.so
 
 clean:
 	rm -f *.so

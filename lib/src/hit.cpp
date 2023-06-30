@@ -24,6 +24,7 @@ bool sphereobj::hit(const ray& P, double t_min, double t_max, hit_record& rec) c
 	rec.t = root;
 	rec.p = P.at(rec.t);
 	vector3 outnormals = (rec.p - this->center) / this->radius;
+	getUVs(outnormals, rec.u, rec.v);
 	rec.frontFacing = dot(P.direction(), outnormals) < 0;
 	rec.normal = rec.frontFacing ? outnormals : -outnormals;
 	rec.normal = rec.normal.normalize();
@@ -34,6 +35,14 @@ bool sphereobj::hit(const ray& P, double t_min, double t_max, hit_record& rec) c
 bool sphereobj::boundingBox(double time0, double time1, aabb& outputbox) const {
 	outputbox = aabb(this->center - vector3(this->radius, this->radius, this->radius), this->center + vector3(this->radius, this->radius, this->radius));
 	return true;
+}
+
+void sphereobj::getUVs(const point& p, double& u, double& v) {
+	double theta = acos(-p.y());
+	double phi = atan2(-p.z(), p.x()) + M_PI;
+
+	u = phi / (M_PI * 2.0);
+	v = theta / M_PI;
 }
 
 bool movingsphereobj::hit(const ray& P, double t_min, double t_max, hit_record& rec) const {

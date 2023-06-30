@@ -14,6 +14,8 @@ struct hit_record {
 	std::shared_ptr<material> matPtr;
 	double t;
 	bool frontFacing;
+	double u;
+	double v;
 };
 
 class hitobj {
@@ -27,6 +29,7 @@ private:
 	point center;
 	double radius;
 	std::shared_ptr<material> matPtr;
+	static void getUVs(const point& p, double& u, double& v);
 public:
 	sphereobj() : radius(0) {}
 	sphereobj(point p, std::shared_ptr<material> mat, double r) : center(p), radius(r), matPtr(mat) {}
