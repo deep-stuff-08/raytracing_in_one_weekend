@@ -2,7 +2,7 @@
 #include<vector3.h>
 #include<cmath>
 
-bool aabb::hit(ray& r, double t_min, double t_max) {
+bool aabb::hit(const ray& r, double t_min, double t_max) const {
 	for(int i = 0; i < 3; i++) {
 		double invD = 1.0 / r.direction()[i];
 		double t0 = (minimum[i] - r.origin()[i]) * invD;

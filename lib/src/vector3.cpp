@@ -158,6 +158,10 @@ double random_double(double min, double max) {
 	return distribution(generator);
 }
 
+int random_int(int min, int max) {
+	return static_cast<int>(random_double(min, max + 1));
+}
+
 vector3 vector3::random(double min, double max) {
 	return vector3(random_double(min, max), random_double(min, max), random_double(min, max));
 }

@@ -13,7 +13,7 @@ public:
 	aabb(point min, point max): minimum(min), maximum(max) {}
 	point min() { return minimum; }
 	point max() { return maximum; }
-	bool hit(ray &r, double t_min, double t_max);
+	bool hit(const ray &r, double t_min, double t_max) const;
 };
 
 aabb surroundingBox(aabb box0, aabb box1);

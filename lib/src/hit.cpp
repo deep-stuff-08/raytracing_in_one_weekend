@@ -1,5 +1,6 @@
 #include<hit.h>
 #include<cmath>
+#include<algorithm>
 
 using namespace std;
 
@@ -70,6 +71,7 @@ bool movingsphereobj::boundingBox(double time0, double time1, aabb& outputbox) c
 	aabb aabb0 = aabb(this->center(time0) - vector3(this->radius, this->radius, this->radius), this->center(time0) + vector3(this->radius, this->radius, this->radius));
 	aabb aabb1 = aabb(this->center(time1) - vector3(this->radius, this->radius, this->radius), this->center(time1) + vector3(this->radius, this->radius, this->radius));
 	outputbox = aabb0;
+	return true;
 }
 
 void hit_list::add(shared_ptr<hitobj> obj) {
@@ -108,8 +110,77 @@ bool hit_list::boundingBox(double time0, double time1, aabb& outputbox) const {
 		}
 		outputbox = firstBox ? tempBox : surroundingBox(outputbox, tempBox);
 	}
+	return true;
 }
 
-bvhnode::bvhnode(const std::vector<std::shared_ptr<hitobj>>& srcObjects, size_t start, size_t end, double time0, double time1) {
-	
+bool boxCompare(const shared_ptr<hitobj> a, const shared_ptr<hitobj> b, int axis) {
+	aabb boxA, boxB;
+
+	if (!a->boundingBox(0, 0, boxA) || !b->boundingBox(0,0, boxB)) {
+		std::cerr << "No bounding box in bvh_node constructor.\n";
+	}
+
+	return boxA.min()[axis] < boxB.min()[axis];
+}
+
+bool boxCompareX(const shared_ptr<hitobj> a, const shared_ptr<hitobj> b) {
+	return boxCompare(a, b, 0);
+}
+
+bool boxCompareY(const shared_ptr<hitobj> a, const shared_ptr<hitobj> b) {
+	return boxCompare(a, b, 1);
+}
+
+bool boxCompareZ(const shared_ptr<hitobj> a, const shared_ptr<hitobj> b) {
+	return boxCompare(a, b, 2);
+}
+
+bvhnode::bvhnode(const vector<shared_ptr<hitobj>>& srcObjects, size_t start, size_t end, double time0, double time1) {
+	vector<shared_ptr<hitobj>> objects = srcObjects;
+
+	int axis = random_int(0, 2);
+
+	auto comparator = axis == 0 ? boxCompareX : axis == 1 ? boxCompareY : boxCompareZ;
+
+	size_t objectSpan = end - start;
+
+	if(objectSpan == 1) {
+		this->left = this->right = objects[start];
+	} else if(objectSpan == 2) {
+		if(comparator(objects[start], objects[start + 1])) {
+			this->left = objects[start];
+			this->right = objects[start + 1];
+		} else {
+			this->left = objects[start + 1];	
+			this->right = objects[start];
+		}
+	} else {
+		std::sort(objects.begin() + start, objects.begin() + end, comparator);
+
+		size_t mid = start + objectSpan / 2;
+		this->left = make_shared<bvhnode>(objects, start, mid, time0, time1);
+		this->right = make_shared<bvhnode>(objects, mid, end, time0, time1);
+	}
+	aabb boxA, boxB;
+
+	if (!this->left->boundingBox(time0, time1, boxA) || !this->right->boundingBox(time0, time1, boxB)) {
+		std::cerr << "No bounding box in bvh_node constructor.\n";
+	}
+
+	box = surroundingBox(boxA, boxB);
+}
+
+bool bvhnode::hit(const ray& r, double t_min, double t_max, hit_record& rec) const {
+	if(!this->box.hit(r, t_min, t_max)) {
+		return false;
+	}
+	bool hitLeft = this->left->hit(r, t_min, t_max, rec);
+	bool hitRight = this->right->hit(r, t_min, hitLeft ? rec.t : t_max, rec);
+
+	return hitLeft || hitRight;
+}
+
+bool bvhnode::boundingBox(double time0, double time1, aabb& outputbox) const {
+	outputbox = this->box;
+	return true;
 }

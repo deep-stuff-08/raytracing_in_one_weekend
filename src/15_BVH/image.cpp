@@ -72,7 +72,12 @@ hit_list generateScene() {
 	shared_ptr<material> mat3 = make_shared<metal>(color(0.7, 0.6, 0.5), 0.0);
 	world.add(make_shared<sphereobj>(point(4, 1, 0), mat3, 1.0));
 
-	return world;
+	shared_ptr<bvhnode> rootNode = make_shared<bvhnode>(world, 0, 0);	
+
+	hit_list bvh;
+	bvh.add(rootNode);
+
+	return bvh;
 }
 
 int main(void) {
