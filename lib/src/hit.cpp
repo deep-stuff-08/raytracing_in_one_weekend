@@ -1,6 +1,7 @@
 #include<hit.h>
 #include<cmath>
 #include<algorithm>
+#include<limits>
 
 using namespace std;
 
@@ -164,6 +165,27 @@ bool quadobjxz::boundingBox(double time0, double time1, aabb& outputbox) const {
 	return true;
 }
 
+cubeobj::cubeobj(const point& p0, const point& p1, shared_ptr<material> matPtr): boxMin(p0), boxMax(p1) {
+	this->sides.add(make_shared<quadobjxy>(p0.x(), p1.x(), p0.y(), p1.y(), p1.z(), matPtr));
+	this->sides.add(make_shared<quadobjxy>(p0.x(), p1.x(), p0.y(), p1.y(), p0.z(), matPtr));
+
+	this->sides.add(make_shared<quadobjyz>(p0.y(), p1.y(), p0.z(), p1.z(), p1.x(), matPtr));
+	this->sides.add(make_shared<quadobjyz>(p0.y(), p1.y(), p0.z(), p1.z(), p0.x(), matPtr));
+
+	this->sides.add(make_shared<quadobjxz>(p0.x(), p1.x(), p0.z(), p1.z(), p1.y(), matPtr));
+	this->sides.add(make_shared<quadobjxz>(p0.x(), p1.x(), p0.z(), p1.z(), p0.y(), matPtr));
+}
+
+bool cubeobj::hit(const ray& r, double t_min, double t_max, hit_record& rec) const {
+	return this->sides.hit(r, t_min, t_max, rec);
+}
+
+bool cubeobj::boundingBox(double time0, double time1, aabb& outputbox) const {
+	outputbox = aabb(this->boxMin, this->boxMax);
+	return true;
+}
+
+
 void hit_list::add(shared_ptr<hitobj> obj) {
 	this->objs.push_back(obj);
 }
@@ -273,4 +295,93 @@ bool bvhnode::hit(const ray& r, double t_min, double t_max, hit_record& rec) con
 bool bvhnode::boundingBox(double time0, double time1, aabb& outputbox) const {
 	outputbox = this->box;
 	return true;
+}
+
+bool translate::hit(const ray& r, double t_min, double t_max, hit_record& rec) const {
+	ray movedr = ray(r.origin() - offset, r.direction(), r.time());
+	if(!obj->hit(movedr, t_min, t_max, rec)) {
+		return false;
+	}
+	rec.p += offset;
+	rec.frontFacing = dot(movedr.direction(), rec.normal) < 0;
+	rec.normal = rec.frontFacing ? rec.normal : -rec.normal;
+	rec.normal = rec.normal.normalize();
+	return true;
+}
+
+bool translate::boundingBox(double time0, double time1, aabb& outputbox) const {
+	if(!obj->boundingBox(time0, time1, outputbox)) {
+		return false;
+	}
+	outputbox = aabb(outputbox.min() + offset, outputbox.max() + offset);
+	return true;
+}
+
+rotatey::rotatey(shared_ptr<hitobj> ptr, double ang) : obj(ptr) {
+	double rad = ang * M_PI / 180.0f;
+	this->sinTheta = sin(rad);
+	this->cosTheta = cos(rad);
+	this->hasBox = ptr->boundingBox(0, 0, this->box);
+
+	point min = point(numeric_limits<double>::infinity(), numeric_limits<double>::infinity(), numeric_limits<double>::infinity());
+	point max = point(-numeric_limits<double>::infinity(), -numeric_limits<double>::infinity(), -numeric_limits<double>::infinity());
+
+	for (int i = 0; i < 2; i++) {
+		for (int j = 0; j < 2; j++) {
+			for (int k = 0; k < 2; k++) {
+				double x = i * this->box.max().x() + (1 - i) * this->box.min().x();
+				double y = j * this->box.max().y() + (1 - j) * this->box.min().y();
+				double z = k * this->box.max().z() + (1 - k) * this->box.min().z();
+
+				auto newx = this->cosTheta * x + this->sinTheta * z;
+				auto newz = -this->sinTheta * x + this->cosTheta * z;
+
+				vector3 tester(newx, y, newz);
+
+				for (int c = 0; c < 3; c++) {
+					min[c] = fmin(min[c], tester[c]);
+					max[c] = fmax(max[c], tester[c]);
+				}
+			}
+		}
+	}
+	this->box = aabb(min, max);
+}
+
+bool rotatey::hit(const ray& r, double t_min, double t_max, hit_record& rec) const {
+	vector3 origin = r.origin();
+	vector3 direction = r.direction();
+
+	origin[0] = this->cosTheta * r.origin()[0] - this->sinTheta * r.origin()[2];
+	origin[2] = this->sinTheta * r.origin()[0] + this->cosTheta * r.origin()[2];
+
+	direction[0] = this->cosTheta * r.direction()[0] - this->sinTheta * r.direction()[2];
+	direction[2] = this->sinTheta * r.direction()[0] + this->cosTheta * r.direction()[2];
+
+	ray rotatedr(origin, direction, r.time());
+
+	if (!obj->hit(rotatedr, t_min, t_max, rec)) {
+		return false;
+	}
+
+	point p = rec.p;
+	vector3 normal = rec.normal;
+
+	p[0] = this->cosTheta * rec.p[0] + this->sinTheta * rec.p[2];
+	p[2] = -this->sinTheta * rec.p[0] + this->cosTheta * rec.p[2];
+
+	normal[0] = this->cosTheta * rec.normal[0] + this->sinTheta * rec.normal[2];
+	normal[2] = -this->sinTheta * rec.normal[0] + this->cosTheta * rec.normal[2];
+
+	rec.p = p;
+	rec.frontFacing = dot(rotatedr.direction(), normal) < 0;
+	rec.normal = rec.frontFacing ? normal : -normal;
+	rec.normal = rec.normal.normalize();
+
+	return true;
+}
+
+bool rotatey::boundingBox(double time0, double time1, aabb& outputbox) const {
+	outputbox = this->box;
+	return this->hasBox;
 }

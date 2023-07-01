@@ -9,10 +9,6 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include<stb_image_write.h>
 
-#ifndef RESOURCE_PATH
-#define RESOURCE_PATH ""
-#endif
-
 using namespace std;
 
 color rayColorFor(const ray& currentray, const hitobj& world, int depth) {
@@ -46,7 +42,15 @@ hit_list generateScene() {
 	world.add(make_shared<quadobjxz>(0, 555, 0, 555, 0, white));
 	world.add(make_shared<quadobjxz>(0, 555, 0, 555, 555, white));
 	world.add(make_shared<quadobjxy>(0, 555, 0, 555, 555, white));
+	shared_ptr<hitobj> box1 = make_shared<cubeobj>(point(0, 0, 0), point(165, 330, 165), white);
+	box1 = make_shared<rotatey>(box1, 15);
+	box1 = make_shared<translate>(box1, vector3(265,0,295));
+	world.add(box1);
 
+	shared_ptr<hitobj> box2 = make_shared<cubeobj>(point(0,0,0), point(165,165,165), white);
+	box2 = make_shared<rotatey>(box2, -18);
+	box2 = make_shared<translate>(box2, vector3(130,0,65));
+	world.add(box2);
 	return world;
 }
 

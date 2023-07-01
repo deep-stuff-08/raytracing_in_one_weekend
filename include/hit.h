@@ -98,6 +98,18 @@ public:
 	friend bvhnode;
 };
 
+class cubeobj : public hitobj {
+private:
+	hit_list sides;
+	point boxMin;
+	point boxMax;
+public:
+	cubeobj() {}
+	cubeobj(const point& p0, const point& p1, std::shared_ptr<material> matPtr);
+	virtual bool hit(const ray& r, double t_min, double t_max, hit_record& rec) const override;
+	virtual bool boundingBox(double time0, double time1, aabb& outputbox) const override;
+};
+
 class bvhnode : public hitobj {
 private:
 	std::shared_ptr<hitobj> left;
@@ -107,6 +119,29 @@ public:
 	bvhnode() {}
 	bvhnode(const hit_list& list, double time0, double time1) : bvhnode(list.objs, 0, list.objs.size(), time0, time1) {}
 	bvhnode(const std::vector<std::shared_ptr<hitobj>>& srcObjects, size_t start, size_t end, double time0, double time1);
+	virtual bool hit(const ray& r, double t_min, double t_max, hit_record& rec) const override;
+	virtual bool boundingBox(double time0, double time1, aabb& outputbox) const override;
+};
+
+class translate : public hitobj {
+private:
+	std::shared_ptr<hitobj> obj;
+	vector3 offset;
+public:
+	translate(std::shared_ptr<hitobj> ptr, vector3 off) : obj(ptr), offset(off) {}
+	virtual bool hit(const ray& r, double t_min, double t_max, hit_record& rec) const override;
+	virtual bool boundingBox(double time0, double time1, aabb& outputbox) const override;
+};
+
+class rotatey : public hitobj {
+private:
+	std::shared_ptr<hitobj> obj;
+	double sinTheta;
+	double cosTheta;
+	bool hasBox;
+	aabb box;
+public:
+	rotatey(std::shared_ptr<hitobj> ptr, double ang);
 	virtual bool hit(const ray& r, double t_min, double t_max, hit_record& rec) const override;
 	virtual bool boundingBox(double time0, double time1, aabb& outputbox) const override;
 };
