@@ -153,9 +153,10 @@ void vector3::addColor(std::vector<unsigned char>& v, int sample) {
 }
 
 double random_double(double min, double max) {
-	static uniform_real_distribution<double> distribution(min, max);
-	static mt19937 generator;
-	return distribution(generator);
+	return ((double)rand() / (double)RAND_MAX * (max - min) + min);
+	// static uniform_real_distribution<double> distribution(min, max);
+	// static mt19937 generator;
+	// return distribution(generator);
 }
 
 int random_int(int min, int max) {
