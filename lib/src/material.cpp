@@ -56,3 +56,9 @@ bool diffuselight::scatter(const ray& rayIn, const hit_record& rec, color& atten
 color diffuselight::emitted(double u, double v, const point& p) const {
 	return this->tcolor->value(u, v, p);
 }
+
+bool isotropic::scatter(const ray& rayIn, const hit_record& rec, color& attenuation, ray& scattered) const {
+	scattered = ray(rec.p, random_in_unit_sphere(), rayIn.time());
+	attenuation = this->albedo->value(rec.u, rec.v, rec.p);
+	return true;
+}

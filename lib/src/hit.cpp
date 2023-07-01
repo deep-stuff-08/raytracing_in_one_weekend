@@ -385,3 +385,47 @@ bool rotatey::boundingBox(double time0, double time1, aabb& outputbox) const {
 	outputbox = this->box;
 	return this->hasBox;
 }
+
+bool constantMedium::hit(const ray& r, double t_min, double t_max, hit_record& rec) const {
+	hit_record rec1, rec2;
+
+	if (!obj->hit(r, -numeric_limits<double>::infinity(), numeric_limits<double>::infinity(), rec1)) {
+		return false;
+	}
+
+	if (!obj->hit(r, rec1.t+0.0001, numeric_limits<double>::infinity(), rec2)) {
+		return false;
+	}
+
+	if (rec1.t < t_min) { rec1.t = t_min; }
+	if (rec2.t > t_max) { rec2.t = t_max; }
+
+	if (rec1.t >= rec2.t) {
+		return false;
+	}
+
+	if (rec1.t < 0) {
+		rec1.t = 0;
+	}
+
+	const double rayLength = r.direction().length();
+	const double distanceInsideBoundary = (rec2.t - rec1.t) * rayLength;
+	const double hitDistance = this->negInvDensity * log(random_double());
+
+	if (hitDistance > distanceInsideBoundary) {
+		return false;
+	}
+
+	rec.t = rec1.t + hitDistance / rayLength;
+	rec.p = r.at(rec.t);
+
+	rec.normal = vector3(1,0,0);
+	rec.frontFacing = true;
+	rec.matPtr = this->phaseFunction;
+
+	return true;
+}
+
+bool constantMedium::boundingBox(double time0, double time1, aabb& outputbox) const {
+	return obj->boundingBox(time0, time1, outputbox);
+}

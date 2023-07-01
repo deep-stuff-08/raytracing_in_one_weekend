@@ -5,8 +5,7 @@
 #include<memory>
 #include<ray.h>
 #include<aabb.h>
-
-class material;
+#include<material.h>
 
 struct hit_record {
 	point p;
@@ -142,6 +141,18 @@ private:
 	aabb box;
 public:
 	rotatey(std::shared_ptr<hitobj> ptr, double ang);
+	virtual bool hit(const ray& r, double t_min, double t_max, hit_record& rec) const override;
+	virtual bool boundingBox(double time0, double time1, aabb& outputbox) const override;
+};
+
+class constantMedium : public hitobj {
+private:
+	std::shared_ptr<hitobj> obj;
+	std::shared_ptr<material> phaseFunction;
+	double negInvDensity;
+public:
+	constantMedium(std::shared_ptr<hitobj> ptr, double density, std::shared_ptr<texture> mat) : obj(ptr), negInvDensity(-1/density), phaseFunction(std::make_shared<isotropic>(mat)) {}
+	constantMedium(std::shared_ptr<hitobj> ptr, double density, color col) : obj(ptr), negInvDensity(-1/density), phaseFunction(std::make_shared<isotropic>(col)) {}
 	virtual bool hit(const ray& r, double t_min, double t_max, hit_record& rec) const override;
 	virtual bool boundingBox(double time0, double time1, aabb& outputbox) const override;
 };

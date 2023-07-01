@@ -1,5 +1,5 @@
 #ifndef __MATERIAL__
-#define __MATERIAL
+#define __MATERIAL__
 
 #include<ray.h>
 #include<texture.h>
@@ -49,6 +49,15 @@ public:
 	diffuselight(color col): tcolor(std::make_shared<solidColor>(col)) {}
 	virtual bool scatter(const ray& rayIn, const hit_record& rec, color& attenuation, ray& scattered) const override;
 	virtual color emitted(double u, double v, const point& p) const override;
+};
+
+class isotropic : public material {
+private:
+	std::shared_ptr<texture> albedo;
+public:
+	isotropic(std::shared_ptr<texture> tex): albedo(tex) {}
+	isotropic(color col): albedo(std::make_shared<solidColor>(col)) {}
+	virtual bool scatter(const ray& rayIn, const hit_record& rec, color& attenuation, ray& scattered) const override;
 };
 
 #endif
