@@ -91,7 +91,7 @@ int main(void) {
 	const double aspectRatio = 16.0 / 9.0;
 	const int imageHeight = 360;
 	const int imageWidth = static_cast<int>(imageHeight * aspectRatio);
-	const int samplesPerPixel = 1000;
+	const int samplesPerPixel = 4000;
 	const int maxDepth = 50;
 
 	vector<unsigned char> pngData;
