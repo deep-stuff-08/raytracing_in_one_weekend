@@ -5,11 +5,7 @@ all: run
 run: image.run opengl.run
 
 image.run: image.cpp
-	g++ -I ../../include image.cpp -L ../../lib -lvector3 -o image.run
-
-opengl.run:
-	g++ opengl.cpp -o opengl.run
+	g++ -I ../../include image.cpp -L ../../lib -lvector3 -ltimer -o image.run
 
 clean:
-	rm opengl.run
 	rm image.run
