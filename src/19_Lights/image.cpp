@@ -5,6 +5,7 @@
 #include<ray.h>
 #include<hit.h>
 #include<camera.h>
+#include<timer.h>
 #include<material.h>
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include<stb_image_write.h>
@@ -44,7 +45,7 @@ hit_list generateScene() {
 	world.add(make_shared<sphereobj>(point(0, 1, 0), mat1, 1.0));
 	
 	shared_ptr<diffuselight> difflight = make_shared<diffuselight>(color(10,10,10));
-	world.add(make_shared<quadobj>(3, 5, 1, 3, -2, difflight));
+	world.add(make_shared<quadobjxy>(3, 5, 1, 3, -2, difflight));
 	
 	world.add(make_shared<sphereobj>(point(0, 4.0, 0), difflight, 1.0));
 	return world;
@@ -56,6 +57,9 @@ int main(void) {
 	const int imageWidth = static_cast<int>(imageHeight * aspectRatio);
 	const int samplesPerPixel = 100;
 	const int maxDepth = 10;
+
+	timer t;
+	t.start();
 
 	vector<unsigned char> pngData;
 	
@@ -78,6 +82,7 @@ int main(void) {
 			pixColor.addColor(pngData, samplesPerPixel);
 		}
 	}
+	t.end();
 	stbi_write_png("output.png", imageWidth, imageHeight, 3, pngData.data(), imageWidth * 3);
-	cout<<"\nDone.\n";
+	cout<<"\nDone. Time Taken = "<<t<<endl;
 }

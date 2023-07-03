@@ -4,6 +4,7 @@
 #include<vector3.h>
 #include<ray.h>
 #include<hit.h>
+#include<timer.h>
 #include<camera.h>
 #include<material.h>
 #define STB_IMAGE_WRITE_IMPLEMENTATION
@@ -32,6 +33,7 @@ color rayColorFor(const ray& currentray, const hitobj& world, int depth) {
 
 hit_list generateScene() {
 	hit_list world;
+	hit_list spheres;
 
 	shared_ptr<material> ground = make_shared<lambertian>(color(0.5, 0.5, 0.5));
 	world.add(make_shared<sphereobj>(point(0, -1000, 0), ground, 1000));
@@ -46,24 +48,27 @@ hit_list generateScene() {
 				if(chooser < 0.6) {
 					color albedo = color::random() * color::random();
 					mat = make_shared<lambertian>(albedo);
-					world.add(make_shared<sphereobj>(center, mat, 0.2));
+					spheres.add(make_shared<sphereobj>(center, mat, 0.2));
 				} else if(chooser < 0.8) {
 					color albedo = color::random() * color::random();
 					mat = make_shared<lambertian>(albedo);
 					point center2 = center + point(0, random_double(0, 0.5), 0);
-					world.add(make_shared<movingsphereobj>(center, center2, mat, 0.2, 0, 1));
+					spheres.add(make_shared<movingsphereobj>(center, center2, mat, 0.2, 0, 1));
 				} else if(chooser < 0.95) {
 					color albedo = color::random(0.5, 1.0);
 					double fuzz = random_double(0.0, 0.7);
 					mat = make_shared<metal>(albedo, fuzz);
-					world.add(make_shared<sphereobj>(center, mat, 0.2));
+					spheres.add(make_shared<sphereobj>(center, mat, 0.2));
 				} else {
 					mat = make_shared<dielectric>(1.5);
-					world.add(make_shared<sphereobj>(center, mat, 0.2));
+					spheres.add(make_shared<sphereobj>(center, mat, 0.2));
 				}
 			}
 		}
 	}
+	shared_ptr<hitobj> spherebvh = make_shared<bvhnode>(spheres, 0, 1);
+
+	world.add(spherebvh);
 
 	shared_ptr<material> mat1 = make_shared<dielectric>(1.5);
 	world.add(make_shared<sphereobj>(point(0, 1, 0), mat1, 1.0));
@@ -81,6 +86,9 @@ int main(void) {
 	const int imageWidth = static_cast<int>(imageHeight * aspectRatio);
 	const int samplesPerPixel = 100;
 	const int maxDepth = 30;
+
+	timer t;
+	t.start();
 
 	vector<unsigned char> pngData;
 	
@@ -103,6 +111,7 @@ int main(void) {
 			pixColor.addColor(pngData, samplesPerPixel);
 		}
 	}
+	t.end();
 	stbi_write_png("output.png", imageWidth, imageHeight, 3, pngData.data(), imageWidth * 3);
-	cout<<"\nDone.\n";
+	cout<<"\nDone. Time Taken = "<<t<<endl;
 }

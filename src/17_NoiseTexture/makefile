@@ -2,14 +2,10 @@
 
 all: run
 
-run: image.run opengl.run
+run: image.run
 
 image.run: image.cpp
-	g++ -I ../../include image.cpp -L ../../lib -lvector3 -lray -lhit -lcamera -lmaterial -laabb -ltexture -lnoise -o image.run -D TYPE=0
-
-opengl.run:
-	g++ opengl.cpp -o opengl.run
+	g++ -I ../../include image.cpp -L ../../lib -lvector3 -lray -laabb -ltimer -lhit -lcamera -lmaterial -laabb -ltexture -lnoise -o image.run -D TYPE=0
 
 clean:
-	rm opengl.run
 	rm image.run

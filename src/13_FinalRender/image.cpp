@@ -32,10 +32,10 @@ color rayColorFor(const ray& currentray, const hitobj& world, int depth) {
 }
 
 hit_list generateScene() {
-	hit_list world;
+	hit_list spheres;
 
 	shared_ptr<material> ground = make_shared<lambertian>(color(0.5, 0.5, 0.5));
-	world.add(make_shared<sphereobj>(point(0, -1000, 0), ground, 1000));
+	spheres.add(make_shared<sphereobj>(point(0, -1000, 0), ground, 1000));
 
 	for(int a = -11; a < 11; a++) {
 		for(int b = -11; b < 11; b++) {
@@ -47,19 +47,24 @@ hit_list generateScene() {
 				if(chooser < 0.8) {
 					color albedo = color::random() * color::random();
 					mat = make_shared<lambertian>(albedo);
-					world.add(make_shared<sphereobj>(center, mat, 0.2));
+					spheres.add(make_shared<sphereobj>(center, mat, 0.2));
 				} else if(chooser < 0.95) {
 					color albedo = color::random(0.5, 1.0);
 					double fuzz = random_double(0.0, 0.7);
 					mat = make_shared<metal>(albedo, fuzz);
-					world.add(make_shared<sphereobj>(center, mat, 0.2));
+					spheres.add(make_shared<sphereobj>(center, mat, 0.2));
 				} else {
 					mat = make_shared<dielectric>(1.5);
-					world.add(make_shared<sphereobj>(center, mat, 0.2));
+					spheres.add(make_shared<sphereobj>(center, mat, 0.2));
 				}
 			}
 		}
 	}
+
+	shared_ptr<hitobj> spherebvh = make_shared<bvhnode>(spheres, 0, 0);
+
+	hit_list world;
+	world.add(spherebvh);
 
 	shared_ptr<material> mat1 = make_shared<dielectric>(1.5);
 	world.add(make_shared<sphereobj>(point(0, 1, 0), mat1, 1.0));
