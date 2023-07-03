@@ -2,6 +2,7 @@
 #include<cmath>
 #include<vector3.h>
 #include<ray.h>
+#include<timer.h>
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include<stb_image_write.h>
 
@@ -51,6 +52,9 @@ int main(void) {
 	const double aspectRatio = 16.0 / 9.0;
 	const int imageHeight = 1080;
 	const int imageWidth = static_cast<int>(imageHeight * aspectRatio);
+	
+	timer t;
+	t.start();
 
 	vector<unsigned char> pngData;
 
@@ -72,6 +76,7 @@ int main(void) {
 			rayColorFor(r).addColor(pngData);
 		}
 	}
+	t.end();
 	stbi_write_png("output.png", imageWidth, imageHeight, 3, pngData.data(), imageWidth * 3);
-	cout<<"\nDone.\n";
+	cout<<"\nDone. Time Taken = "<<t<<endl;
 }
