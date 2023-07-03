@@ -4,6 +4,7 @@
 #include<vector3.h>
 #include<ray.h>
 #include<hit.h>
+#include<timer.h>
 #include<camera.h>
 #include<material.h>
 #define STB_IMAGE_WRITE_IMPLEMENTATION
@@ -64,6 +65,9 @@ int main(void) {
 	const int samplesPerPixel = 100;
 	const int maxDepth = 10;
 
+	timer t;
+	t.start();
+
 	vector<unsigned char> pngData;
 	
 	hit_list world = generateScene();
@@ -85,6 +89,7 @@ int main(void) {
 			pixColor.addColor(pngData, samplesPerPixel);
 		}
 	}
+	t.end();
 	stbi_write_png("output.png", imageWidth, imageHeight, 3, pngData.data(), imageWidth * 3);
-	cout<<"\nDone.\n";
+	cout<<"\nDone. Time Taken = "<<t<<endl;
 }

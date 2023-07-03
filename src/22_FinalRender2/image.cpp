@@ -6,9 +6,9 @@
 #include<hit.h>
 #include<camera.h>
 #include<material.h>
+#include<timer.h>
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include<stb_image_write.h>
-#include<chrono>
 
 using namespace std;
 
@@ -86,13 +86,14 @@ hit_list generateScene() {
 }
 
 int main(void) {
-	auto start = chrono::steady_clock::now();
-
 	const double aspectRatio = 16.0 / 9.0;
 	const int imageHeight = 360;
 	const int imageWidth = static_cast<int>(imageHeight * aspectRatio);
 	const int samplesPerPixel = 4000;
 	const int maxDepth = 50;
+
+	timer t;
+	t.start();
 
 	vector<unsigned char> pngData;
 	
@@ -115,7 +116,7 @@ int main(void) {
 			pixColor.addColor(pngData, samplesPerPixel);
 		}
 	}
-	auto end = chrono::steady_clock::now();
+	t.end();
 	stbi_write_png("output.png", imageWidth, imageHeight, 3, pngData.data(), imageWidth * 3);
-	cout<<"\nDone. Time Taken: "<<chrono::duration_cast<chrono::milliseconds>(end-start).count() / 1000.0<<endl;
+	cout<<"\nDone. Time Taken = "<<t<<endl;
 }
