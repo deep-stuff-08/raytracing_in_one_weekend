@@ -20,8 +20,8 @@ color perlinnoiseColor::value(double u, double v, const point& p) const {
 
 color turbulanceColor::value(double u, double v, const point& p) const {
 	double accum = 0.0;
-	auto temp_p = p;
-	auto weight = 1.0;
+	point temp_p = p;
+	double weight = 1.0;
 
 	for (int i = 0; i < this->depth; i++) {
 		accum += weight * noiseObj.value(temp_p);
@@ -55,7 +55,7 @@ color textureColor::value(double u, double v, const point& p) const {
 	int i = static_cast<int>(u * this->width - 1);
 	int j = static_cast<int>(v * this->height - 1);
 
-	const auto color_scale = 1.0 / 255.0;
+	const double color_scale = 1.0 / 255.0;
 	unsigned char* pixel = data + (j * this->bytesPerPixel * this->width) + (i * this->bytesPerPixel);
 	return color(color_scale * pixel[0], color_scale * pixel[1], color_scale * pixel[2]);
 }

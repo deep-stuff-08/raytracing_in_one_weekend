@@ -38,13 +38,13 @@ static double perlin_interp(vector3 c[2][2][2], double u, double v, double w) {
 }
 
 double noise::value(const point& p) const {
-	auto u = p.x() - floor(p.x());
-	auto v = p.y() - floor(p.y());
-	auto w = p.z() - floor(p.z());
+	double u = p.x() - floor(p.x());
+	double v = p.y() - floor(p.y());
+	double w = p.z() - floor(p.z());
 	
-	auto i = static_cast<int>(floor(p.x()));
-	auto j = static_cast<int>(floor(p.y()));
-	auto k = static_cast<int>(floor(p.z()));
+	int i = static_cast<int>(floor(p.x()));
+	int j = static_cast<int>(floor(p.y()));
+	int k = static_cast<int>(floor(p.z()));
 	vector3 c[2][2][2];
 
 	for (int di=0; di < 2; di++) {

@@ -336,8 +336,8 @@ rotatey::rotatey(shared_ptr<hitobj> ptr, double ang) : obj(ptr) {
 				double y = j * this->box.max().y() + (1 - j) * this->box.min().y();
 				double z = k * this->box.max().z() + (1 - k) * this->box.min().z();
 
-				auto newx = this->cosTheta * x + this->sinTheta * z;
-				auto newz = -this->sinTheta * x + this->cosTheta * z;
+				double newx = this->cosTheta * x + this->sinTheta * z;
+				double newz = -this->sinTheta * x + this->cosTheta * z;
 
 				vector3 tester(newx, y, newz);
 

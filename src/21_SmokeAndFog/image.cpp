@@ -32,10 +32,10 @@ color rayColorFor(const ray& currentray, const hitobj& world, int depth) {
 hit_list generateScene() {
 	hit_list world;
 
-	auto red = make_shared<lambertian>(color(.65, .05, .05));
-	auto white = make_shared<lambertian>(color(.73, .73, .73));
-	auto green = make_shared<lambertian>(color(.12, .45, .15));
-	auto light = make_shared<diffuselight>(color(7, 7, 7));
+	shared_ptr<material> red = make_shared<lambertian>(color(.65, .05, .05));
+	shared_ptr<material> white = make_shared<lambertian>(color(.73, .73, .73));
+	shared_ptr<material> green = make_shared<lambertian>(color(.12, .45, .15));
+	shared_ptr<material> light = make_shared<diffuselight>(color(7, 7, 7));
 
 	world.add(make_shared<quadobjyz>(0, 555, 0, 555, 555, green));
 	world.add(make_shared<quadobjyz>(0, 555, 0, 555, 0, red));

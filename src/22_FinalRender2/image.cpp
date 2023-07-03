@@ -31,7 +31,7 @@ color rayColorFor(const ray& currentray, const hitobj& world, int depth) {
 
 hit_list generateScene() {
 	hit_list boxes1;
-	auto ground = make_shared<lambertian>(color(0.48, 0.83, 0.53));
+	shared_ptr<material> ground = make_shared<lambertian>(color(0.48, 0.83, 0.53));
 
 	const int boxes_per_side = 5;
 	for (int i = 0; i < boxes_per_side; i++) {
@@ -54,9 +54,9 @@ hit_list generateScene() {
 	shared_ptr<diffuselight> light = make_shared<diffuselight>(color(7, 7, 7));
 	objects.add(make_shared<quadobjxz>(123, 423, 147, 412, 554, light));
 
-	auto center1 = point(400, 400, 200);
-	auto center2 = center1 + vector3(30,0,0);
-	auto moving_sphere_material = make_shared<lambertian>(color(0.7, 0.3, 0.1));
+	point center1 = point(400, 400, 200);
+	point center2 = center1 + vector3(30,0,0);
+	shared_ptr<material> moving_sphere_material = make_shared<lambertian>(color(0.7, 0.3, 0.1));
 	objects.add(make_shared<movingsphereobj>(center1, center2, moving_sphere_material, 50, 0, 1));
 
 	objects.add(make_shared<sphereobj>(point(260, 150, 45), make_shared<dielectric>(1.5), 50));
@@ -68,13 +68,13 @@ hit_list generateScene() {
 	boundary = make_shared<sphereobj>(point(0, 0, 0), make_shared<dielectric>(1.5), 5000);
 	objects.add(make_shared<constantMedium>(boundary, 0.0001, color(1,1,1)));
 
-	auto emat = make_shared<lambertian>(make_shared<textureColor>("earth.jpg"));
+	shared_ptr<material> emat = make_shared<lambertian>(make_shared<textureColor>("earth.jpg"));
 	objects.add(make_shared<sphereobj>(point(400,200,400), emat, 100));
-	auto pertext = make_shared<perlinnoiseColor>(0.1);
+	shared_ptr<texture> pertext = make_shared<perlinnoiseColor>(0.1);
 	objects.add(make_shared<sphereobj>(point(220,280,300), make_shared<lambertian>(pertext), 80));
 
 	hit_list boxes2;
-	auto white = make_shared<lambertian>(color(.73, .73, .73));
+	shared_ptr<material> white = make_shared<lambertian>(color(.73, .73, .73));
 	int ns = 1000;
 	for (int j = 0; j < ns; j++) {
 		boxes2.add(make_shared<sphereobj>(point::random(0,165), white, 10));
