@@ -166,18 +166,21 @@ bool quadobjxz::boundingBox(double time0, double time1, aabb& outputbox) const {
 }
 
 cubeobj::cubeobj(const point& p0, const point& p1, shared_ptr<material> matPtr): boxMin(p0), boxMax(p1) {
-	this->sides.add(make_shared<quadobjxy>(p0.x(), p1.x(), p0.y(), p1.y(), p1.z(), matPtr));
-	this->sides.add(make_shared<quadobjxy>(p0.x(), p1.x(), p0.y(), p1.y(), p0.z(), matPtr));
+	hit_list li;
+	li.add(make_shared<quadobjxy>(p0.x(), p1.x(), p0.y(), p1.y(), p1.z(), matPtr));
+	li.add(make_shared<quadobjxy>(p0.x(), p1.x(), p0.y(), p1.y(), p0.z(), matPtr));
 
-	this->sides.add(make_shared<quadobjyz>(p0.y(), p1.y(), p0.z(), p1.z(), p1.x(), matPtr));
-	this->sides.add(make_shared<quadobjyz>(p0.y(), p1.y(), p0.z(), p1.z(), p0.x(), matPtr));
+	li.add(make_shared<quadobjyz>(p0.y(), p1.y(), p0.z(), p1.z(), p1.x(), matPtr));
+	li.add(make_shared<quadobjyz>(p0.y(), p1.y(), p0.z(), p1.z(), p0.x(), matPtr));
 
-	this->sides.add(make_shared<quadobjxz>(p0.x(), p1.x(), p0.z(), p1.z(), p1.y(), matPtr));
-	this->sides.add(make_shared<quadobjxz>(p0.x(), p1.x(), p0.z(), p1.z(), p0.y(), matPtr));
+	li.add(make_shared<quadobjxz>(p0.x(), p1.x(), p0.z(), p1.z(), p1.y(), matPtr));
+	li.add(make_shared<quadobjxz>(p0.x(), p1.x(), p0.z(), p1.z(), p0.y(), matPtr));
+
+	this->sides = make_shared<bvhnode>(li, 0, 0);
 }
 
 bool cubeobj::hit(const ray& r, double t_min, double t_max, hit_record& rec) const {
-	return this->sides.hit(r, t_min, t_max, rec);
+	return this->sides->hit(r, t_min, t_max, rec);
 }
 
 bool cubeobj::boundingBox(double time0, double time1, aabb& outputbox) const {

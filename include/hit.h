@@ -99,7 +99,7 @@ public:
 
 class cubeobj : public hitobj {
 private:
-	hit_list sides;
+	std::shared_ptr<bvhnode> sides;
 	point boxMin;
 	point boxMax;
 public:
