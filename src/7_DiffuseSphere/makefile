@@ -1,20 +1,27 @@
 .PHONY: run clean
 
+LIB_PATH=../../lib
+
 all: run
 
 run: image.run
+	./image.run
+	xdg-open output.png
 
-image.run: image.cpp
-	g++ -I ../../include image.cpp -L ../../lib -lvector3 -lray -lhit -lbasiccamera -ltimer -laabb -o image.run -D TYPE=0
+libcpuraytracer.so:
+	cd ../../lib && $(MAKE) $@
 
-image0.run: image.cpp
-	g++ -I ../../include image.cpp -L ../../lib -lvector3 -lray -lhit -lbasiccamera -ltimer -laabb -o image.run -D TYPE=0
+image.run: image.cpp libcpuraytracer.so
+	g++ -I ../../include image.cpp -L $(LIB_PATH) -Wl,-rpath=$(LIB_PATH) -lcpuraytracer -o image.run
 
-image1.run: image.cpp
-	g++ -I ../../include image.cpp -L ../../lib -lvector3 -lray -lhit -lbasiccamera -ltimer -laabb -o image.run -D TYPE=1
+image0.run: image.cpp libcpuraytracer.so
+	g++ -I ../../include image.cpp -L $(LIB_PATH) -Wl,-rpath=$(LIB_PATH) -lcpuraytracer -o image.run -D TYPE=0
 
-image2.run: image.cpp
-	g++ -I ../../include image.cpp -L ../../lib -lvector3 -lray -lhit -lbasiccamera -ltimer -laabb -o image.run -D TYPE=2
+image1.run: image.cpp libcpuraytracer.so
+	g++ -I ../../include image.cpp -L $(LIB_PATH) -Wl,-rpath=$(LIB_PATH) -lcpuraytracer -o image.run -D TYPE=1
+
+image2.run: image.cpp libcpuraytracer.so
+	g++ -I ../../include image.cpp -L $(LIB_PATH) -Wl,-rpath=$(LIB_PATH) -lcpuraytracer -o image.run -D TYPE=2
 
 clean:
 	rm image.run

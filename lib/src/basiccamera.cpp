@@ -2,7 +2,7 @@
 
 using namespace std;
 
-camera::camera(double aspectRatio, double viewport, double focalLenght) {
+basiccamera::basiccamera(double aspectRatio, double viewport, double focalLenght) {
 	double vwportHeight = viewport;
 	double vwportWidth = viewport * aspectRatio;
 
@@ -12,6 +12,6 @@ camera::camera(double aspectRatio, double viewport, double focalLenght) {
 	this->lowerLeftConner = origin - horizontal/2 - vertical/2 - vector3(0, 0, focalLenght);
 }
 
-ray camera::rayAt(double u, double v) {
+ray basiccamera::rayAt(double u, double v) {
 	return ray(this->origin, this->lowerLeftConner + u * this->horizontal + v * this->vertical - origin);
 }
