@@ -1,17 +1,20 @@
 .PHONY: clean
 
-SRCS := $(wildcard src/*.cpp)
-OBJS := $(patsubst src/%.cpp, bin/%.o, $(SRCS))
+CPUSRCS := $(wildcard src/cpu/*.cpp)
+CPUOBJS := $(patsubst src/cpu/%.cpp, bin/cpu/%.o, $(CPUSRCS))
 all: libcpuraytracer.so
 
-libcpuraytracer.so: bin $(OBJS)
-	g++ $(OBJS) -o libcpuraytracer.so -shared
+libcpuraytracer.so: bin/cpu $(CPUOBJS)
+	g++ $(CPUOBJS) -o libcpuraytracer.so -shared
+
+bin/cpu: bin
+	mkdir bin/cpu
 
 bin:
 	mkdir bin
 
-bin/%.o : src/%.cpp
+bin/cpu/%.o : src/cpu/%.cpp
 	g++ -fPIC -I ../include -c $^ -o $@
 
 clean:
-	rm -f $(OBJS)
+	rm -f $(CPUOBJS) libcpuraytracer.so
