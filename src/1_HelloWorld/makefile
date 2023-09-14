@@ -12,16 +12,16 @@ cuda: cuda.run
 	./cuda.run
 	xdg-open outputcuda.png
 
-libhelper.so:
+libcpuraytracer.so:
 	cd ../../lib && $(MAKE) $@
 
-libcpuraytracer.so:
+libcudaraytracer.a:
 	cd ../../lib && $(MAKE) $@
 
 cpu.run: cpu.cpp libcpuraytracer.so
 	g++ -I ../../include cpu.cpp -L $(LIB_PATH) -Wl,-rpath=$(LIB_PATH) -lcpuraytracer -o cpu.run
 
-cuda.run: cuda.cu
+cuda.run: cuda.cu libcudaraytracer.a
 	nvcc -I ../../include cuda.cu -L $(LIB_PATH) -Xlinker=-rpath=$(LIB_PATH) -lcudaraytracer -o cuda.run
 
 clean:
