@@ -5,24 +5,24 @@ DIRGUARD=@mkdir -p $(@D)
 CPUSRCS := $(wildcard src/cpu/*.cpp)
 CPUOBJS := $(patsubst src/cpu/%.cpp, bin/cpu/%.o, $(CPUSRCS))
 
-CUDASRCS := $(wildcard src/cuda/*.cu)
-CUDAOBJS := $(patsubst src/cuda/%.cu, bin/cuda/%.o, $(CUDASRCS))
+CUDASRCS := $(wildcard src/cuda/*.cpp)
+CUDAOBJS := $(patsubst src/cuda/%.cpp, bin/cuda/%.o, $(CUDASRCS))
 
-all: libcpuraytracer.so libcudaraytracer.a
+all: libcpuraytracer.so libcudaraytracer.so
 
 libcpuraytracer.so: $(CPUOBJS)
 	g++ $(CPUOBJS) -o libcpuraytracer.so -shared
 
-libcudaraytracer.a: $(CUDAOBJS)
-	nvcc $(CUDAOBJS) -lib -o libcudaraytracer.a
+libcudaraytracer.so: $(CUDAOBJS)
+	nvcc $(CUDAOBJS) -o libcudaraytracer.so -shared
 
 bin/cpu/%.o : src/cpu/%.cpp
 	$(DIRGUARD)
 	g++ -fPIC -I ../include -c $^ -o $@
 
-bin/cuda/%.o : src/cuda/%.cu
+bin/cuda/%.o : src/cuda/%.cpp
 	$(DIRGUARD)
-	nvcc -rdc=true -Xcompiler=-fPIC -I ../include -c $^ -o $@
+	nvcc -I ../include -c $^ -o $@
 
 clean:
 	rm -f $(CPUOBJS) $(CUDAOBJS) libcpuraytracer.so libcudaraytracer.so
