@@ -1,58 +1,64 @@
 #include<iostream>
-#include<cmath>
 #include<vector3.h>
-#include<ray.h>
 #include<timer.h>
+#include<ray.h>
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include<stb_image_write.h>
 
 using namespace std;
 
-//Find Normal Maths:
+//Sphere Maths:
 /*
-normal is a unit vector perpendicular to the surface denoted by N
-It is computed by the difference of the Point where Hit H and Sphere Center C
-N = normalize(H - C)
+|P|^2 = r^2 then Point P lies on the surface of Sphere with r radius
+|P|^2 = P.P = r^2
 
-Calculate distance t for Ray Hit
-t = (-b +/- sqrt(Discriminant)) / (2 * a)
-H = P(t)
+modify formula to account for a sphere with different center C
+(P-C).(P-C) = r^2
+
+
+substitute P to the ray function for the distance t
+(P(t) - C).(P(t) - C) = r^2
+
+Expand the ray form
+(A + tb - C).(A + tb - C) = r^2
+
+Simplify using vector algebra
+=> (A.A) + (A.tb) - (A.C) + (A.tb) + (tb.tb) - (tb.C) - (A.C) - (tb.C) + (C.C) = r^2.......Move terms around
+=> (tb.tb) + (A.tb) + (A.tb) - (tb.C) - (tb.C) - (A.C) - (A.C) + (A.A) + (C.C) - r^2 = 0
+=> t^2b.b + 2(A.tb) - 2(tb.C) - 2(A.C) + |A|^2 + |C|^2 - r^2 = 0.................use product rule (A-B).(A-B) = |A|^2 + |B|^2 + 2(A.B)
+=> b.bt^2 + 2(A-C).tb + (A-C).(A-C) - r^2 --final formula 
+
+Based on this quadratic eqn a, b, c = as follows
+a = (b.b)
+b = 2.0 * ((A-C).b)
+c = (A-C).(A-C) - r^2
 */
 
-double hitSphere(point C, double r, ray P) {
+bool didRayHitSphere(point C, double r, ray P) {
 	vector3 A_minus_C = P.origin() - C;
 	double a = dot(P.direction(), P.direction());
 	double b = 2.0 * dot(A_minus_C, P.direction());
 	double c = dot(A_minus_C, A_minus_C) - r * r;
+
+	//Discriminant of Quadratic Eqn Formula - b^2 + 4ac
 	double discriminant = b * b - 4.0 * a * c;
-	if(discriminant < 0) {
-		return -1.0;
-	} else {
-		//Use - instead of +, assuming sphere is front of camera and we want the front surface 
-		return (-b - sqrt(discriminant)) / (2.0 * a);
-	}
+	return discriminant > 0;
 }
 
 color rayColorFor(const ray& currentray) {
-	point C = point(0.0, 0.0, -1.0);
-	double t = hitSphere(C, 0.5, currentray);
-	if(t > 0.0) {
-		point H = currentray.at(t);
-		vector3 N = H - C;
-		N = N.normalize();
-		N = (N + 1.0) * 0.5;
-		return N;
+	if(didRayHitSphere(point(0.0, 0.0, -1.0), 0.5, currentray)) {
+		return color(1.0, 0.0, 0.0);
 	}
 	vector3 normalizedDirection = currentray.direction().normalize();
-	double mixt = (normalizedDirection.y() + 1.0) * 0.5;
-	return (1.0 - mixt) * color(1.0, 1.0, 1.0) + mixt * color(0.5, 0.7, 1.0);
+	double t = (normalizedDirection.y() + 1.0) * 0.5;
+	return (1.0 - t) * color(1.0, 1.0, 1.0) + t * color(0.5, 0.7, 1.0);
 }
 
 int main(void) {
 	const double aspectRatio = 16.0 / 9.0;
 	const int imageHeight = 1080;
 	const int imageWidth = static_cast<int>(imageHeight * aspectRatio);
-	
+
 	timer t;
 	t.start();
 
@@ -77,6 +83,6 @@ int main(void) {
 		}
 	}
 	t.end();
-	stbi_write_png("outputcpu.png", imageWidth, imageHeight, 3, pngData.data(), imageWidth * 3);
+	stbi_write_png("output.png", imageWidth, imageHeight, 3, pngData.data(), imageWidth * 3);
 	cout<<"\nDone. Time Taken = "<<t<<endl;
 }

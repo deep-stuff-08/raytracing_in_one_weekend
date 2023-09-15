@@ -41,7 +41,7 @@ public:
 	__host__ __device__ float length_2() const;
 	__host__ __device__ vector3& normalize();
 
-	__host__ __device__ friend float dot(vector3 v1, vector3 v2);
+	// __host__ __device__ friend float dot(vector3 v1, vector3 v2);
 	// __host__ __device__ friend vector3 cross(vector3 v1, vector3 v2);
 	// __host__ __device__ friend vector3 reflect(const vector3& v, const vector3& n);
 	// __host__ __device__ friend vector3 refract(const vector3& v, const vector3& n, float ratio);
@@ -167,9 +167,9 @@ vector3& vector3::normalize() {
 	return (*this);
 }
 
-float dot(vector3 v1, vector3 v2) {
-	return v1.e[0] * v2.e[0] + v1.e[1] * v2.e[1] + v1.e[2] * v2.e[2];
-}
+// float dot(vector3 v1, vector3 v2) {
+// 	return v1.e[0] * v2.e[0] + v1.e[1] * v2.e[1] + v1.e[2] * v2.e[2];
+// }
 
 // vector3 cross(vector3 v1, vector3 v2) {
 // 	return vector3(
