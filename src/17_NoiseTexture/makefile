@@ -1,18 +1,11 @@
 .PHONY: run clean
 
-LIB_PATH=../../lib
-
 all: run
 
 run: image.run
-	./image.run
-	xdg-open output.png
 
-libcpuraytracer.so:
-	cd ../../lib && $(MAKE) $@
-
-image.run: image.cpp libcpuraytracer.so
-	g++ -I ../../include image.cpp -L $(LIB_PATH) -Wl,-rpath=$(LIB_PATH) -lcpuraytracer -o image.run
+image.run: image.cpp
+	g++ -I ../../include image.cpp -L ../../lib -lvector3 -lray -laabb -ltimer -lhit -lcamera -lmaterial -laabb -ltexture -lnoise -o image.run -D TYPE=0
 
 clean:
 	rm image.run

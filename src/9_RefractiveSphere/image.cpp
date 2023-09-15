@@ -55,7 +55,7 @@ int main(void) {
 	world.add(make_shared<sphereobj>(point(-1, 0, -1), matLeft, -0.4));
 	world.add(make_shared<sphereobj>(point(1, 0, -1), matRight, 0.5));
 
-	basiccamera cam(aspectRatio, 2.0, 1.0);
+	camera cam(aspectRatio, 2.0, 1.0);
 
 	for(int i = imageHeight - 1; i >= 0; i--) {
 		cout<<"\rScanlines remaining: "<<i<<' '<<flush;

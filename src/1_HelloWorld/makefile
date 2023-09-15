@@ -1,25 +1,11 @@
-.PHONY: all cpu cuda clean
-
-LIB_PATH=../../lib
+.PHONY: run clean
 
 all: run
 
-cpu: cpu.run
-	./cpu.run
-	xdg-open outputcpu.png
+run: image.run opengl.run
 
-cuda: cuda.run
-	./cuda.run
-	xdg-open outputcuda.png
-
-libcpuraytracer.so:
-	cd ../../lib && $(MAKE) $@
-
-cpu.run: cpu.cpp libcpuraytracer.so
-	g++ -I ../../include cpu.cpp -L $(LIB_PATH) -Wl,-rpath=$(LIB_PATH) -lcpuraytracer -o cpu.run
-
-cuda.run: cuda.cu
-	nvcc -I ../../include cuda.cu -o cuda.run
+image.run: image.cpp
+	g++ -I ../../include image.cpp -L ../../lib -lvector3 -ltimer -o image.run
 
 clean:
-	rm cpu.run cuda.run
+	rm image.run

@@ -24,8 +24,6 @@ color rayColorFor(const ray& currentray, const hitobj& world, int depth) {
 		point target = rec.p + rec.normal + random_on_unit_sphere();
 #elif TYPE==2
 		point target = rec.p + rec.normal + random_in_unit_hemisphere(rec.normal);
-#else
-		point target = rec.p + rec.normal + random_in_unit_sphere();
 #endif
 		return 0.5 * rayColorFor(ray(rec.p, target - rec.p), world, depth - 1);
 	}
@@ -50,7 +48,7 @@ int main(void) {
 	world.add(make_shared<sphereobj>(point(0, 0, -1), nullptr, 0.5));
 	world.add(make_shared<sphereobj>(point(0, -100.5, -1), nullptr, 100));
 
-	basiccamera cam(aspectRatio, 2.0, 1.0);
+	camera cam(aspectRatio, 2.0, 1.0);
 
 	for(int i = imageHeight - 1; i >= 0; i--) {
 		cout<<"\rScanlines remaining: "<<i<<' '<<flush;

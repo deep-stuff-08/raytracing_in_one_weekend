@@ -23,6 +23,6 @@ int main(void) {
 		}
 	}
 	t.end();
-	stbi_write_png("outputcpu.png", imageWidth, imageHeight, 3, pngData.data(), imageWidth * 3);
+	stbi_write_png("output.png", imageWidth, imageHeight, 3, pngData.data(), imageWidth * 3);
 	cout<<"\nDone. Time Taken = "<<t<<endl;
 }
