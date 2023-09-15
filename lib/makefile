@@ -1,32 +1,13 @@
 .PHONY: clean
 
-<<<<<<< HEAD
-CPUSRCS := $(wildcard src/cpu/*.cpp)
-CPUOBJS := $(patsubst src/cpu/%.cpp, bin/cpu/%.o, $(CPUSRCS))
-all: libcpuraytracer.so
-
-libcpuraytracer.so: bin/cpu $(CPUOBJS)
-	g++ $(CPUOBJS) -o libcpuraytracer.so -shared
-
-bin/cpu: bin
-	mkdir bin/cpu
-=======
 all: libvector3.so libray.so libhit.so libcamera.so libbasiccamera.so libmaterial.so libaabb.so libtexture.so libnoise.so libtimer.so
 
 libvector3.so: src/vector3.cpp
 	g++ -I ../include src/vector3.cpp -fPIC -shared -o libvector3.so
->>>>>>> parent of 82f39a4 (Better Library for other APIs)
 
 libray.so: src/ray.cpp
 	g++ -I ../include src/ray.cpp -fPIC -shared -o libray.so
 
-<<<<<<< HEAD
-bin/cpu/%.o : src/cpu/%.cpp
-	g++ -fPIC -I ../include -c $^ -o $@
-
-clean:
-	rm -f $(CPUOBJS) libcpuraytracer.so
-=======
 libhit.so: src/hit.cpp
 	g++ -I ../include src/hit.cpp -fPIC -shared -o libhit.so
 
@@ -53,4 +34,3 @@ libtimer.so: src/timer.cpp
 
 clean:
 	rm -f *.so
->>>>>>> parent of 82f39a4 (Better Library for other APIs)
