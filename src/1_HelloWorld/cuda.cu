@@ -22,8 +22,8 @@ int main(int argc, char** argv) {
 	const int imageWidth = 256;
 	const int imageHeight = 256;
 
-	timer t;
-	t.start();
+	// timer t;
+	// t.start();
 
 	float *fb;
 	cudaerr(cudaMallocManaged(&fb, imageWidth * imageHeight * 3 * sizeof(float)));
@@ -46,9 +46,7 @@ int main(int argc, char** argv) {
             pngData.push_back(static_cast<unsigned char>(255.99 * b));
         }
     }
-	t.end();
+	// t.end();
 	stbi_write_png("outputcuda.png", imageWidth, imageHeight, 3, pngData.data(), imageWidth * 3);
-	cout<<"Done. Time Taken = "<<t<<endl;
-
-	cudaFree(fb);
+	// cout<<"\nDone. Time Taken = "<<t<<endl;
 }
